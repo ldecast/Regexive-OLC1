@@ -21,11 +21,25 @@ public class Main {
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+            generarCompilador();
+            Interfaz vp = new Interfaz();
+            vp.setVisible(true);
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
-        Interfaz vp = new Interfaz();
-        vp.setVisible(true);
     }
     
+    private static void generarCompilador() 
+    {
+        try {
+            String ruta = "src/Analizadores/";
+            String opcFlex[] = {ruta + "Lexico.jflex", "-d", ruta};
+            jflex.Main.generate(opcFlex);
+            
+            String opcCUP[] = {"-destdir", ruta, "-parser", "parser", ruta + "Sintactico.cup"};
+            java_cup.Main.main(opcCUP);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -19,10 +19,14 @@ d open the template in the editor.
  */
 package GUI;
 
+import static java.awt.Color.WHITE;
 import java.awt.event.KeyEvent;
+import java.io.StringReader;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.ColorUIResource;
 
 /**
  *
@@ -30,10 +34,12 @@ import javax.swing.border.EmptyBorder;
  */
 public class Interfaz extends javax.swing.JFrame {
 
+    public static String texto_consola = "";
     /**
      * Creates new form NewJFrame
      */
     public Interfaz() {
+        UIManager.put("TextPane.caretForeground", new ColorUIResource(WHITE));
         initComponents();
     }
 
@@ -48,17 +54,17 @@ public class Interfaz extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextPane1 = new javax.swing.JTextPane();
+        txtEntrada = new javax.swing.JTextPane();
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnAutomatas = new javax.swing.JButton();
+        btnAnalizar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTextPane3 = new javax.swing.JTextPane();
+        txtSalida = new javax.swing.JTextPane();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTree1 = new javax.swing.JTree();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jPanel2 = new javax.swing.JPanel();
+        comboBox = new javax.swing.JComboBox<>();
+        imgPanel = new javax.swing.JPanel();
         jSeparator1 = new javax.swing.JSeparator();
         BarraMenu = new javax.swing.JMenuBar();
         FileMenu = new javax.swing.JMenu();
@@ -66,6 +72,10 @@ public class Interfaz extends javax.swing.JFrame {
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem5 = new javax.swing.JMenuItem();
+        VentanaMenu = new javax.swing.JMenu();
+        jMenuItem7 = new javax.swing.JMenuItem();
+        jMenuItem8 = new javax.swing.JMenuItem();
         AboutMenu = new javax.swing.JMenu();
         jMenuItem6 = new javax.swing.JMenuItem();
         BtnExit = new javax.swing.JMenu();
@@ -91,57 +101,57 @@ public class Interfaz extends javax.swing.JFrame {
             }
         });
 
-        jTextPane1.setBackground(new java.awt.Color(20, 29, 38));
-        jTextPane1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(47, 47, 47)));
-        Border border = jTextPane1.getBorder();
+        txtEntrada.setBackground(new java.awt.Color(20, 29, 38));
+        txtEntrada.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(47, 47, 47)));
+        Border border = txtEntrada.getBorder();
         Border margin = new EmptyBorder(5,10,10,5);
-        jTextPane1.setBorder(javax.swing.BorderFactory.createCompoundBorder(border, margin));
-        jTextPane1.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 14)); // NOI18N
-        jTextPane1.setForeground(new java.awt.Color(211, 211, 211));
-        jTextPane1.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtEntrada.setBorder(javax.swing.BorderFactory.createCompoundBorder(border, margin));
+        txtEntrada.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 14)); // NOI18N
+        txtEntrada.setForeground(new java.awt.Color(211, 211, 211));
+        txtEntrada.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                jTextPane1KeyPressed(evt);
+                txtEntradaKeyPressed(evt);
             }
         });
-        jScrollPane1.setViewportView(jTextPane1);
+        jScrollPane1.setViewportView(txtEntrada);
 
         jLabel1.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(204, 204, 204));
         jLabel1.setText("Cadena de entrada");
 
-        jButton1.setBackground(new java.awt.Color(36, 52, 71));
-        jButton1.setFont(new java.awt.Font("Century Gothic", 1, 16)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(51, 51, 51));
-        jButton1.setText("Generar autómatas");
-        jButton1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(36, 52, 71), 2));
-        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton1.setFocusable(false);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnAutomatas.setBackground(new java.awt.Color(36, 52, 71));
+        btnAutomatas.setFont(new java.awt.Font("Century Gothic", 1, 16)); // NOI18N
+        btnAutomatas.setForeground(new java.awt.Color(51, 51, 51));
+        btnAutomatas.setText("Generar autómatas");
+        btnAutomatas.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(36, 52, 71), 2));
+        btnAutomatas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAutomatas.setFocusable(false);
+        btnAutomatas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnAutomatasActionPerformed(evt);
             }
         });
-        jButton1.addKeyListener(new java.awt.event.KeyAdapter() {
+        btnAutomatas.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                jButton1KeyPressed(evt);
+                btnAutomatasKeyPressed(evt);
             }
         });
 
-        jButton2.setBackground(new java.awt.Color(36, 52, 71));
-        jButton2.setFont(new java.awt.Font("Century Gothic", 1, 16)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(51, 51, 51));
-        jButton2.setText("Analizar entradas");
-        jButton2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(36, 52, 71), 2));
-        jButton2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton2.setFocusable(false);
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnAnalizar.setBackground(new java.awt.Color(36, 52, 71));
+        btnAnalizar.setFont(new java.awt.Font("Century Gothic", 1, 16)); // NOI18N
+        btnAnalizar.setForeground(new java.awt.Color(51, 51, 51));
+        btnAnalizar.setText("Analizar entradas");
+        btnAnalizar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(36, 52, 71), 2));
+        btnAnalizar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAnalizar.setFocusable(false);
+        btnAnalizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnAnalizarActionPerformed(evt);
             }
         });
-        jButton2.addKeyListener(new java.awt.event.KeyAdapter() {
+        btnAnalizar.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                jButton2KeyPressed(evt);
+                btnAnalizarKeyPressed(evt);
             }
         });
 
@@ -149,19 +159,19 @@ public class Interfaz extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(204, 204, 204));
         jLabel2.setText("Salida");
 
-        jTextPane3.setBackground(new java.awt.Color(20, 29, 38));
-        jTextPane3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(47, 47, 47)));
-        Border border2 = jTextPane3.getBorder();
+        txtSalida.setBackground(new java.awt.Color(20, 29, 38));
+        txtSalida.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(47, 47, 47)));
+        Border border2 = txtSalida.getBorder();
         Border margin2 = new EmptyBorder(5,10,10,10);
-        jTextPane3.setBorder(javax.swing.BorderFactory.createCompoundBorder(border2, margin2));
-        jTextPane3.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 14)); // NOI18N
-        jTextPane3.setForeground(new java.awt.Color(211, 211, 211));
-        jTextPane3.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtSalida.setBorder(javax.swing.BorderFactory.createCompoundBorder(border2, margin2));
+        txtSalida.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 14)); // NOI18N
+        txtSalida.setForeground(new java.awt.Color(211, 211, 211));
+        txtSalida.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                jTextPane3KeyPressed(evt);
+                txtSalidaKeyPressed(evt);
             }
         });
-        jScrollPane3.setViewportView(jTextPane3);
+        jScrollPane3.setViewportView(txtSalida);
 
         jScrollPane2.setBackground(new java.awt.Color(20, 29, 38));
         jScrollPane2.setBorder(new EmptyBorder(10,5,10,5));
@@ -194,25 +204,25 @@ public class Interfaz extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(jTree1);
 
-        jComboBox1.setBackground(new java.awt.Color(61, 64, 65));
-        jComboBox1.setFont(new java.awt.Font("Century Gothic", 0, 16)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ver imágenes...", "Árboles", "Tablas de siguientes", "Tablas de transiciones", "Autómatas" }));
-        jComboBox1.addKeyListener(new java.awt.event.KeyAdapter() {
+        comboBox.setBackground(new java.awt.Color(61, 64, 65));
+        comboBox.setFont(new java.awt.Font("Century Gothic", 0, 16)); // NOI18N
+        comboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ver imágenes...", "Árboles", "Tablas de siguientes", "Tablas de transiciones", "Autómatas" }));
+        comboBox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                jComboBox1KeyPressed(evt);
+                comboBoxKeyPressed(evt);
             }
         });
 
-        jPanel2.setBackground(new java.awt.Color(20, 29, 38));
+        imgPanel.setBackground(new java.awt.Color(20, 29, 38));
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout imgPanelLayout = new javax.swing.GroupLayout(imgPanel);
+        imgPanel.setLayout(imgPanelLayout);
+        imgPanelLayout.setHorizontalGroup(
+            imgPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 541, Short.MAX_VALUE)
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        imgPanelLayout.setVerticalGroup(
+            imgPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
@@ -245,17 +255,17 @@ public class Interfaz extends javax.swing.JFrame {
                                                 .addComponent(jLabel1))
                                             .addGroup(jPanel1Layout.createSequentialGroup()
                                                 .addGap(16, 16, 16)
-                                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(btnAutomatas, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addGap(18, 18, 18)
-                                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addComponent(btnAnalizar, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                         .addGap(40, 40, 40)))
                                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                    .addComponent(imgPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(comboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -264,17 +274,17 @@ public class Interfaz extends javax.swing.JFrame {
                 .addGap(19, 19, 19)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(comboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(imgPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(btnAutomatas, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnAnalizar, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jSeparator1)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -292,7 +302,7 @@ public class Interfaz extends javax.swing.JFrame {
         FileMenu.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
 
         jMenuItem1.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
-        jMenuItem1.setIcon(new javax.swing.ImageIcon("C:\\Users\\luisd\\Documents\\NetBeansProjects\\REGEXIVE\\src\\main\\java\\GUI\\icons\\open-file-icon.png")); // NOI18N
+        jMenuItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/icons/open-file-icon.png"))); // NOI18N
         jMenuItem1.setText("  Abrir                                       Ctrl+A");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -302,7 +312,7 @@ public class Interfaz extends javax.swing.JFrame {
         FileMenu.add(jMenuItem1);
 
         jMenuItem2.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
-        jMenuItem2.setIcon(new javax.swing.ImageIcon("C:\\Users\\luisd\\Documents\\NetBeansProjects\\REGEXIVE\\src\\main\\java\\GUI\\icons\\floppy-icon.png")); // NOI18N
+        jMenuItem2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/icons/floppy-icon.png"))); // NOI18N
         jMenuItem2.setText("  Guardar                                  Ctrl+S");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -312,12 +322,12 @@ public class Interfaz extends javax.swing.JFrame {
         FileMenu.add(jMenuItem2);
 
         jMenuItem3.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
-        jMenuItem3.setIcon(new javax.swing.ImageIcon("C:\\Users\\luisd\\Documents\\NetBeansProjects\\REGEXIVE\\src\\main\\java\\GUI\\icons\\Save-icon.png")); // NOI18N
+        jMenuItem3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/icons/Save-icon.png"))); // NOI18N
         jMenuItem3.setText("  Guardar como...                   Ctrl+Shift+S");
         FileMenu.add(jMenuItem3);
 
         jMenuItem4.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
-        jMenuItem4.setIcon(new javax.swing.ImageIcon("C:\\Users\\luisd\\Documents\\NetBeansProjects\\REGEXIVE\\src\\main\\java\\GUI\\icons\\File-Adobe-Dreamweaver-XML-01-icon.png")); // NOI18N
+        jMenuItem4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/icons/File-Adobe-Dreamweaver-XML-01-icon.png"))); // NOI18N
         jMenuItem4.setText("  Generar XML                         Ctrl+Enter");
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -326,7 +336,33 @@ public class Interfaz extends javax.swing.JFrame {
         });
         FileMenu.add(jMenuItem4);
 
+        jMenuItem5.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        jMenuItem5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/icons/close-icon.png"))); // NOI18N
+        jMenuItem5.setText("  Cerrar archivo");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
+        FileMenu.add(jMenuItem5);
+
         BarraMenu.add(FileMenu);
+
+        VentanaMenu.setForeground(java.awt.Color.darkGray);
+        VentanaMenu.setText("Ventana");
+        VentanaMenu.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+
+        jMenuItem7.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        jMenuItem7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/icons/Window-new-icon.png"))); // NOI18N
+        jMenuItem7.setText("  Nueva ventana                     Ctrl+N");
+        VentanaMenu.add(jMenuItem7);
+
+        jMenuItem8.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        jMenuItem8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/icons/Close-2-icon.png"))); // NOI18N
+        jMenuItem8.setText("  Cerrar ventana                      Alt+W");
+        VentanaMenu.add(jMenuItem8);
+
+        BarraMenu.add(VentanaMenu);
 
         AboutMenu.setForeground(java.awt.Color.darkGray);
         AboutMenu.setText("Acerca de");
@@ -420,41 +456,55 @@ public class Interfaz extends javax.swing.JFrame {
             System.exit(0);
     }//GEN-LAST:event_BtnExitMouseClicked
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void btnAutomatasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAutomatasActionPerformed
+        texto_consola="";
+        txtSalida.setText("");
+        try {
+            String path = txtEntrada.getText();
+            Analizadores.parser sintactico;
+            sintactico = new Analizadores.parser(new Analizadores.Lexico(new StringReader(path)));
+            sintactico.parse();
+            txtSalida.setText(texto_consola);
+        } catch (Exception e) {
+            txtSalida.setText(e.toString());
+        }
+    }//GEN-LAST:event_btnAutomatasActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void btnAnalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_btnAnalizarActionPerformed
 
-    private void jTextPane1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextPane1KeyPressed
+    private void txtEntradaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEntradaKeyPressed
         formKeyPressed(evt);
-    }//GEN-LAST:event_jTextPane1KeyPressed
+    }//GEN-LAST:event_txtEntradaKeyPressed
 
     private void jScrollPane1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jScrollPane1KeyPressed
         formKeyPressed(evt);
     }//GEN-LAST:event_jScrollPane1KeyPressed
 
-    private void jTextPane3KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextPane3KeyPressed
+    private void txtSalidaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSalidaKeyPressed
         formKeyPressed(evt);
-    }//GEN-LAST:event_jTextPane3KeyPressed
+    }//GEN-LAST:event_txtSalidaKeyPressed
 
-    private void jComboBox1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jComboBox1KeyPressed
+    private void comboBoxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_comboBoxKeyPressed
         formKeyPressed(evt);
-    }//GEN-LAST:event_jComboBox1KeyPressed
+    }//GEN-LAST:event_comboBoxKeyPressed
 
-    private void jButton1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButton1KeyPressed
+    private void btnAutomatasKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnAutomatasKeyPressed
         formKeyPressed(evt);
-    }//GEN-LAST:event_jButton1KeyPressed
+    }//GEN-LAST:event_btnAutomatasKeyPressed
 
-    private void jButton2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButton2KeyPressed
+    private void btnAnalizarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnAnalizarKeyPressed
         formKeyPressed(evt);
-    }//GEN-LAST:event_jButton2KeyPressed
+    }//GEN-LAST:event_btnAnalizarKeyPressed
 
     private void jTree1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTree1KeyPressed
         formKeyPressed(evt);
     }//GEN-LAST:event_jTree1KeyPressed
+
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
     
     
     
@@ -463,24 +513,28 @@ public class Interfaz extends javax.swing.JFrame {
     private javax.swing.JMenuBar BarraMenu;
     private javax.swing.JMenu BtnExit;
     private javax.swing.JMenu FileMenu;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JMenu VentanaMenu;
+    private javax.swing.JButton btnAnalizar;
+    private javax.swing.JButton btnAutomatas;
+    private javax.swing.JComboBox<String> comboBox;
+    private javax.swing.JPanel imgPanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextPane jTextPane1;
-    private javax.swing.JTextPane jTextPane3;
     private javax.swing.JTree jTree1;
+    private javax.swing.JTextPane txtEntrada;
+    private javax.swing.JTextPane txtSalida;
     // End of variables declaration//GEN-END:variables
 }
