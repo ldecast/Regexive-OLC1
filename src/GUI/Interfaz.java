@@ -27,6 +27,11 @@ import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.ColorUIResource;
+import Modelos.Expresiones;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -35,6 +40,7 @@ import javax.swing.plaf.ColorUIResource;
 public class Interfaz extends javax.swing.JFrame {
 
     public static String texto_consola = "";
+    public static String fname = "archivoPrueba";
     /**
      * Creates new form NewJFrame
      */
@@ -458,15 +464,24 @@ public class Interfaz extends javax.swing.JFrame {
 
     private void btnAutomatasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAutomatasActionPerformed
         texto_consola="";
+        Modelos.Errores.lista_errores.clear();
         txtSalida.setText("");
         try {
             String path = txtEntrada.getText();
             Analizadores.parser sintactico;
             sintactico = new Analizadores.parser(new Analizadores.Lexico(new StringReader(path)));
             sintactico.parse();
-            txtSalida.setText(texto_consola);
+            Modelos.Errores.reportarErrores(fname);
+            txtSalida.setText(texto_consola);// + Modelos.Expresiones.stack.toString());
         } catch (Exception e) {
             txtSalida.setText(e.toString());
+            try {
+                Modelos.Errores.reportarErrores(fname);
+            } catch (IOException ex) {
+                Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (URISyntaxException ex) {
+                Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_btnAutomatasActionPerformed
 

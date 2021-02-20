@@ -14,7 +14,7 @@ import javax.swing.UnsupportedLookAndFeelException;
  * @author luisd
  */
 public class Main {
-
+    
     /**
      * @param args the command line arguments
      */

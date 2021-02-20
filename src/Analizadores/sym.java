@@ -8,11 +8,12 @@ package Analizadores;
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
-  public static final int conjunto = 15;
+  public static final int conjunto = 16;
   public static final int id = 8;
   public static final int notacionD = 11;
   public static final int notacionA = 12;
   public static final int pcoma = 3;
+  public static final int multiplicativo = 15;
   public static final int EOF = 0;
   public static final int lcierra = 6;
   public static final int labre = 5;
@@ -24,7 +25,6 @@ public class sym {
   public static final int porcentajes = 7;
   public static final int lexema = 9;
   public static final int prconj = 2;
-  public static final int var = 16;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -41,8 +41,8 @@ public class sym {
   "notacionA",
   "deriva",
   "operador",
-  "conjunto",
-  "var"
+  "multiplicativo",
+  "conjunto"
   };
 }
 
