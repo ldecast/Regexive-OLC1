@@ -27,20 +27,24 @@ import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.ColorUIResource;
-import Modelos.Expresiones;
+import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Stack;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import Modelos.*;
 
 /**
  *
  * @author luisd
  */
 public class Interfaz extends javax.swing.JFrame {
-
+    // falta metodo para cargar todo al abrir un archivo
     public static String texto_consola = "";
     public static String fname = "archivoPrueba";
+    public static Stack<String> expName = new Stack<>();
+            
     /**
      * Creates new form NewJFrame
      */
@@ -68,7 +72,7 @@ public class Interfaz extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         txtSalida = new javax.swing.JTextPane();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTree1 = new javax.swing.JTree();
+        jTree = new javax.swing.JTree();
         comboBox = new javax.swing.JComboBox<>();
         imgPanel = new javax.swing.JPanel();
         jSeparator1 = new javax.swing.JSeparator();
@@ -182,33 +186,30 @@ public class Interfaz extends javax.swing.JFrame {
         jScrollPane2.setBackground(new java.awt.Color(20, 29, 38));
         jScrollPane2.setBorder(new EmptyBorder(10,5,10,5));
 
-        jTree1.setBackground(new java.awt.Color(20, 29, 38));
-        jTree1.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
+        jTree.setBackground(new java.awt.Color(20, 29, 38));
+        jTree.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("JTree");
         javax.swing.tree.DefaultMutableTreeNode treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Árboles");
-        javax.swing.tree.DefaultMutableTreeNode treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("-");
-        treeNode2.add(treeNode3);
         treeNode1.add(treeNode2);
         treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Siguientes");
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("-");
-        treeNode2.add(treeNode3);
         treeNode1.add(treeNode2);
         treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Transiciones");
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("-");
-        treeNode2.add(treeNode3);
         treeNode1.add(treeNode2);
         treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Autómatas");
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("-");
-        treeNode2.add(treeNode3);
         treeNode1.add(treeNode2);
-        jTree1.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
-        jTree1.setRootVisible(false);
-        jTree1.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                jTree1KeyPressed(evt);
+        jTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
+        jTree.setRootVisible(false);
+        jTree.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTreeMouseClicked(evt);
             }
         });
-        jScrollPane2.setViewportView(jTree1);
+        jTree.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTreeKeyPressed(evt);
+            }
+        });
+        jScrollPane2.setViewportView(jTree);
 
         comboBox.setBackground(new java.awt.Color(61, 64, 65));
         comboBox.setFont(new java.awt.Font("Century Gothic", 0, 16)); // NOI18N
@@ -465,6 +466,7 @@ public class Interfaz extends javax.swing.JFrame {
     private void btnAutomatasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAutomatasActionPerformed
         texto_consola="";
         Modelos.Errores.lista_errores.clear();
+        expName.clear();
         txtSalida.setText("");
         try {
             String path = txtEntrada.getText();
@@ -473,15 +475,9 @@ public class Interfaz extends javax.swing.JFrame {
             sintactico.parse();
             Modelos.Errores.reportarErrores(fname);
             txtSalida.setText(texto_consola);// + Modelos.Expresiones.stack.toString());
+            addTreeNode();
         } catch (Exception e) {
             txtSalida.setText(e.toString());
-            try {
-                Modelos.Errores.reportarErrores(fname);
-            } catch (IOException ex) {
-                Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (URISyntaxException ex) {
-                Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
     }//GEN-LAST:event_btnAutomatasActionPerformed
 
@@ -513,15 +509,88 @@ public class Interfaz extends javax.swing.JFrame {
         formKeyPressed(evt);
     }//GEN-LAST:event_btnAnalizarKeyPressed
 
-    private void jTree1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTree1KeyPressed
+    private void jTreeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTreeKeyPressed
         formKeyPressed(evt);
-    }//GEN-LAST:event_jTree1KeyPressed
+    }//GEN-LAST:event_jTreeKeyPressed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem5ActionPerformed
+
+    private void jTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTreeMouseClicked
+        try {
+            if (evt.getClickCount() >= 1) {
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) jTree.getLastSelectedPathComponent();
+                if (node == null) {
+                    return;
+                }
+                File f = null;
+                Desktop desktop = Desktop.getDesktop();
+                switch (node.getParent().toString()) {
+                    case "Árboles":
+                        f = new File("src\\ARBOLES_201902238\\" + node.toString() + ".svg");
+                        if (evt.getClickCount() == 1) System.out.println("prueba"); //imprimir en panel
+                        if (evt.getClickCount() == 2) desktop.open(f);
+                        break;
+                    case "Siguientes":
+                        f = new File("src\\SIGUIENTES_201902238\\" + node.toString() + ".svg");
+                        if (evt.getClickCount() == 1) System.out.println("prueba"); //imprimir en panel
+                        if (evt.getClickCount() == 2) desktop.open(f);
+                        break;
+                    case "Transiciones":
+                        f = new File("src\\TRANSICIONES_201902238\\" + node.toString() + ".svg");
+                        if (evt.getClickCount() == 1) System.out.println("prueba"); //imprimir en panel
+                        if (evt.getClickCount() == 2) desktop.open(f);
+                        break;
+                    case "Autómatas":
+                        if (node.toString().startsWith("AFND"))
+                            f = new File("src\\AFND_201902238\\" + node.toString().substring(4) + ".svg");
+                        else
+                            f = new File("src\\AFD_201902238\\" + node.toString().substring(3) + ".svg");
+                        if (evt.getClickCount() == 1) System.out.println("prueba"); //imprimir en panel
+                        if (evt.getClickCount() == 2) desktop.open(f);
+                        break;
+                }
+            }
+        } catch (IOException e) {
+            System.err.println(e.toString());
+        }
+    }//GEN-LAST:event_jTreeMouseClicked
     
+    private void addTreeNode(){
+        DefaultTreeModel model = (DefaultTreeModel)jTree.getModel();
+        DefaultMutableTreeNode root = (DefaultMutableTreeNode)model.getRoot();
+        DefaultMutableTreeNode arboles = (DefaultMutableTreeNode)model.getChild(root, 0);
+        DefaultMutableTreeNode siguientes = (DefaultMutableTreeNode)model.getChild(root, 1);
+        DefaultMutableTreeNode transiciones = (DefaultMutableTreeNode)model.getChild(root, 2);
+        DefaultMutableTreeNode automatas = (DefaultMutableTreeNode)model.getChild(root, 3);
+        for (int i = 0; i < expName.size(); i++) {
+            String x = expName.elementAt(i);
+            switch (x.charAt(0)) {
+                case '0':
+                    arboles.add(new DefaultMutableTreeNode(x.substring(1)+"_"+fname));
+                    break;
+                case '1':
+                    siguientes.add(new DefaultMutableTreeNode(x.substring(1)+"_"+fname));
+                    break;
+                case '2':
+                    transiciones.add(new DefaultMutableTreeNode(x.substring(1)+"_"+fname));
+                    break;
+                case '3':
+                    automatas.add(new DefaultMutableTreeNode("AFND"+x.substring(1)+"_"+fname));
+                    break;
+                case '4':
+                    automatas.add(new DefaultMutableTreeNode("AFD"+x.substring(1)+"_"+fname));
+                    break;
+            }
+        }
+        model.reload(root);
+    }
     
+    public static void addToTree(String item, int type){
+        
+        GUI.Interfaz.expName.add(String.valueOf(type) + item);
+    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu AboutMenu;
@@ -548,7 +617,7 @@ public class Interfaz extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTree jTree1;
+    private javax.swing.JTree jTree;
     private javax.swing.JTextPane txtEntrada;
     private javax.swing.JTextPane txtSalida;
     // End of variables declaration//GEN-END:variables

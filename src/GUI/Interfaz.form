@@ -468,7 +468,7 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Component class="javax.swing.JTree" name="jTree1">
+            <Component class="javax.swing.JTree" name="jTree">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="26" green="1d" red="14" type="rgb"/>
@@ -477,12 +477,13 @@
                   <Font name="Century Gothic" size="12" style="1"/>
                 </Property>
                 <Property name="model" type="javax.swing.tree.TreeModel" editor="org.netbeans.modules.form.editors2.TreeModelEditor">
-                  <TreeModel code="JTree&#xa; &#xc1;rboles&#xa;  -&#xa; Siguientes&#xa;  -&#xa; Transiciones&#xa;  -&#xa; Aut&#xf3;matas&#xa;  -"/>
+                  <TreeModel code="JTree&#xa; &#xc1;rboles&#xa; &#xa; Siguientes&#xa; &#xa; Transiciones&#xa; &#xa; Aut&#xf3;matas&#xa; "/>
                 </Property>
                 <Property name="rootVisible" type="boolean" value="false"/>
               </Properties>
               <Events>
-                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTree1KeyPressed"/>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jTreeMouseClicked"/>
+                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTreeKeyPressed"/>
               </Events>
             </Component>
           </SubComponents>

@@ -118,8 +118,8 @@ public class AFND { //leer de derecha a izquierda e ir agrupando por segmentos e
                         temp += String.valueOf(count)+"[label=\"\"];\n";
                         temp += String.valueOf(sti)+"->"+String.valueOf(count)+"[label=<<font color=\"Crimson\">"+ op1 +"</font>> fontname=\"Century Gothic\" fontsize=\"12\"];\n";
                         aux.add(count);
-                        states.add(count);
                         states.add(sti);
+                        states.add(count);
                         count ++;
                     }
                 }
@@ -127,7 +127,7 @@ public class AFND { //leer de derecha a izquierda e ir agrupando por segmentos e
             else if (isMultiplicative(c)) {
                 if (states.size()>=2){
                     sti = states.remove(0);
-                    stf = states.remove(0);
+                    stf = states.pop(); //states.remove(0); (mejor estetico, pero fallo en 1)
                     switch (c.trim()) {
                         case "?":
                             temp += String.valueOf(sti)+"->"+String.valueOf(stf)+"[label=<<font color=\"Crimson\">ε</font>> fontname=\"Century Gothic\" fontsize=\"12\"];\n";
@@ -198,7 +198,7 @@ public class AFND { //leer de derecha a izquierda e ir agrupando por segmentos e
         toDot(temp);
     }
     
-    public void toDot(String complemento) throws IOException{
+    private void toDot(String complemento) throws IOException{
         String contenido = "";
         contenido += "digraph D {\n"
         + "    graph[bgcolor=\"#141D26\"]\n"
@@ -208,19 +208,20 @@ public class AFND { //leer de derecha a izquierda e ir agrupando por segmentos e
         contenido += complemento;
         contenido += "\n}";
         
-        File archivo = new File("src\\AFND_201902238\\"+GUI.Interfaz.fname+"_"+nombre+".dot");
+        File archivo = new File("src\\AFND_201902238\\"+nombre+"_"+GUI.Interfaz.fname+".dot");
         try (FileWriter escritor = new FileWriter(archivo)) {
             escritor.write(contenido);
         }
+        GUI.Interfaz.addToTree(nombre,3);
         generateSVG();
     }
     
-    public void generateSVG() throws IOException{
+    private void generateSVG() throws IOException{
     	String dotPath = "C:\\Program Files (x86)\\Graphviz2.38\\bin\\dot.exe";
 
-    	String fileInputPath = "src\\AFND_201902238\\"+GUI.Interfaz.fname+"_"+nombre+".dot";
+    	String fileInputPath = "src\\AFND_201902238\\"+nombre+"_"+GUI.Interfaz.fname+".dot";
 
-    	String fileOutputPath = "src\\AFND_201902238\\"+GUI.Interfaz.fname+"_"+nombre+".svg";
+    	String fileOutputPath = "src\\AFND_201902238\\"+nombre+"_"+GUI.Interfaz.fname+".svg";
 
     	String tParam = "-Tsvg";
 
@@ -238,36 +239,4 @@ public class AFND { //leer de derecha a izquierda e ir agrupando por segmentos e
     	rt.exec(cmd);
     }
     
-}
-
-class Nodo{
-    
-    private int estado;
-    private String transicion;
-    private Nodo izq, der;
-
-    public Nodo(int estado, String transicion, Nodo izq, Nodo der) {
-        this.estado = estado;
-        this.transicion = transicion;
-        this.izq = izq;
-        this.der = der;
-    }
-    
-    public String getDot(){
-        String content = "";
-//        if (izq == null && der == null) {
-//            content = "nodo" + id + " [ label =\"" + valor+"\"];\n";
-//        } else {
-//            content = "nodo" + id + " [ label =\"" + valor + "\"];\n";
-//        }
-//        if (izq != null) {
-//            content = content + izq.getCodigoInterno()
-//                    + "nodo" + id + "->nodo" + izq.id + "\n";
-//        }
-//        if (der != null) {
-//            content = content + der.getCodigoInterno()
-//                    + "nodo" + id + "->nodo" + der.id + "\n";
-//        }
-        return content;
-    }
 }

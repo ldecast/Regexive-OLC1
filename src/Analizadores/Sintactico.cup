@@ -1,17 +1,19 @@
 package Analizadores;
 import java_cup.runtime.*;
 import GUI.Interfaz;
-import Modelos.Errores;
+import Modelos.*;
 
 parser code
 {:  
+    public static int id = 0;
+    public static NodoTree raiz;
     //-----------------------------------------para errores sintacticos-------------------------------------------------------------------------------------------
     public void syntax_error(Symbol s)
     {
         System.err.println("Error en la Línea " + (s.right+1) +" Columna "+(s.left+1)+ ". Identificador "+s.value + " no reconocido. Se ha recuperado del error." );
         if (s.value!=null){
             GUI.Interfaz.texto_consola+="<<<Errores sintácticos encontrados>>>\n";
-            Modelos.Errores.lista_errores.add(new Errores("Sintáctico", (String) s.value, (s.right+1), (s.left+1)));
+            Errores.lista_errores.add(new Errores("Sintáctico", (String) s.value, (s.right+1), (s.left+1)));
         }
     }
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception
@@ -35,9 +37,16 @@ INICIO::= EXP {::};
 EXP::= labre SENTENCIA porcentajes EXPRESION:e lcierra {::};
 
 SENTENCIA::= SENTENCIA CONJUNTO pcoma {::}
-            | SENTENCIA INFIJA pcoma {:Modelos.Expresiones.loadExp();:}
+            | SENTENCIA INFIJA pcoma {:
+    Expresiones.loadExp();
+    
+:}
             | CONJUNTO pcoma {::}
-            | INFIJA pcoma {:Modelos.Expresiones.loadExp();:};
+            | INFIJA:r pcoma {: if(r!=null){
+                                Expresiones.loadExp(r);
+                                TREE arbol = new TREE();
+                                }
+                            :};
 
 CONJUNTO ::= prconj dospuntos id deriva NOTACION {::};
 
@@ -45,19 +54,49 @@ NOTACION ::= notacionL {::}
             | notacionA {::}
             | notacionD {::};
 
-INFIJA ::= id:name deriva DEF {:Modelos.Expresiones.setName(name);:};
+INFIJA ::= id:name deriva DEF {:Expresiones.setName(name);:}; //el def son todas las expresiones
 
-DEF::= DEF OPM AUX {::}
+DEF::= DEF OPM:om AUX:cl    {:
+                                //NodoTree nodo = new NodoTree(parser.id, b, null, null);
+                            :}
     | OPM AUX {::}
     | DEF AUX {::}
     | AUX {::};
 
-OPM::= multiplicativo:m operador:o {:if(m!=null) Modelos.Expresiones.add(m); if(o!=null) Modelos.Expresiones.add(o);:}
-    | multiplicativo:m {:if(m!=null) Modelos.Expresiones.add(m);:}
-    | operador:o {:if(o!=null) Modelos.Expresiones.add(o);:};
+OPM::= operador:o multiplicativo:m  {:
+                                        if(m!=null){ Expresiones.add(m); RESULT = m; }
+                                        if(o!=null){ Expresiones.add(o); RESULT = o; }
+                                    :}
+    | multiplicativo:m operador:o   {:
+                                        if(m!=null){ Expresiones.add(m); RESULT = m; }
+                                        if(o!=null){ Expresiones.add(o); RESULT = o; }
+                                    :}
+    | multiplicativo:m  {:
+                            if(m!=null){ Expresiones.add(m); RESULT = m;}
+                        :}
+    | operador:o    {:
+                        if(o!=null){ Expresiones.add(o); RESULT = o; }
+                    };
 
-AUX::= conjunto:a {:if(a!=null) Modelos.Expresiones.add(a);:}
-    | lexema:b {:if(b!=null) Modelos.Expresiones.add(b);:};
+
+AUX::= conjunto:a   {:
+                    if(a!=null){
+                    Expresiones.add(b);
+                    NodoTree nodo = new NodoTree(parser.id, b, null, null);
+                    parser.id++;
+                    RESULT = a;
+                    }
+                    :}; //tipo nodo
+    | lexema:b  {:
+                if(b!=null){
+                Expresiones.add(b);
+                NodoTree nodo = new NodoTree(parser.id, b, null, null);
+                parser.id++;
+                RESULT = b;
+                }
+                :};
+
 
 EXPRESION::= EXPRESION id:a dospuntos lexema pcoma {:GUI.Interfaz.texto_consola+="Expresión reconocida: "+a+"\n";:}
             | id:b dospuntos lexema pcoma {:GUI.Interfaz.texto_consola+="Expresión reconocida: "+b+"\n";:};
+

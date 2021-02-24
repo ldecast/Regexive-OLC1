@@ -3,3 +3,5 @@ nbproject/
 *.xml
 *.mf
 /dist/
+*.svg
+*.dot
