@@ -32,7 +32,7 @@ public class Expresiones {
     
     public static void loadExp() throws IOException{
         String name = stack.remove(0);
-        AFND th = new AFND(name, stack);
+//        AFND th = new AFND(name, stack);
         //AE tree = mew AE(stack.elementAt(0), stack);
         stack.clear();
     }

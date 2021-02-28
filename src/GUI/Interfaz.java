@@ -468,7 +468,7 @@ public class Interfaz extends javax.swing.JFrame {
         Modelos.Errores.lista_errores.clear();
         expName.clear();
         txtSalida.setText("");
-        try {
+//        try {
             String path = txtEntrada.getText();
             Analizadores.parser sintactico;
             sintactico = new Analizadores.parser(new Analizadores.Lexico(new StringReader(path)));
@@ -476,9 +476,9 @@ public class Interfaz extends javax.swing.JFrame {
             Modelos.Errores.reportarErrores(fname);
             txtSalida.setText(texto_consola);// + Modelos.Expresiones.stack.toString());
             addTreeNode();
-        } catch (Exception e) {
-            txtSalida.setText(e.toString());
-        }
+//        } catch (Exception e) {
+//            txtSalida.setText(e.toString());
+//        }
     }//GEN-LAST:event_btnAutomatasActionPerformed
 
     private void btnAnalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizarActionPerformed

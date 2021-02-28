@@ -5,7 +5,8 @@ import Modelos.*;
 
 parser code
 {:  
-    public static int id = 0;
+    public static int id = 1;
+    public static int aux = 1;
     public static NodoTree raiz;
     //-----------------------------------------para errores sintacticos-------------------------------------------------------------------------------------------
     public void syntax_error(Symbol s)
@@ -28,7 +29,8 @@ action code {:
 
 terminal String prconj, pcoma, dospuntos, labre, lcierra, porcentajes, id, lexema, notacionL, notacionD, notacionA, deriva, operador, multiplicativo, conjunto; //, var;
 
-non terminal String INICIO, EXP, SENTENCIA, EXPRESION, NOTACION, CONJUNTO, INFIJA, DEF, AUX, OPM;
+non terminal String INICIO, EXP, SENTENCIA, EXPRESION, NOTACION, CONJUNTO, INFIJA, AUX;
+non terminal NodoTree DEF, OPM;
 
 start with INICIO;
 
@@ -37,16 +39,18 @@ INICIO::= EXP {::};
 EXP::= labre SENTENCIA porcentajes EXPRESION:e lcierra {::};
 
 SENTENCIA::= SENTENCIA CONJUNTO pcoma {::}
-            | SENTENCIA INFIJA pcoma {:
-    Expresiones.loadExp();
-    
-:}
-            | CONJUNTO pcoma {::}
-            | INFIJA:r pcoma {: if(r!=null){
-                                Expresiones.loadExp(r);
-                                TREE arbol = new TREE();
-                                }
-                            :};
+            | SENTENCIA INFIJA pcoma    {:
+                                            //Expresiones.loadExp();
+                                            //parser.raiz = r;
+                                            //TREE arbol = new TREE(parser.raiz);
+                                        :}
+            | CONJUNTO pcoma            {:
+                                            //
+                                        :}
+            | INFIJA:r pcoma            {: if(r!=null){
+                                            //Expresiones.loadExp(r);
+                                            }
+                                        :};
 
 CONJUNTO ::= prconj dospuntos id deriva NOTACION {::};
 
@@ -54,47 +58,57 @@ NOTACION ::= notacionL {::}
             | notacionA {::}
             | notacionD {::};
 
-INFIJA ::= id:name deriva DEF {:Expresiones.setName(name);:}; //el def son todas las expresiones
+INFIJA ::= id:name deriva DEF:s     {:  Expresiones.setName(name);
+                                        NodoTree nodoNum = new NodoTree(parser.id, "#", null, null);
+                                        parser.id++;
+                                        NodoTree nodoI = new NodoTree(parser.id, ".", s, nodoNum);
+                                        parser.id++;
+                                        Expresiones.setName(name);
+                                        parser.raiz = nodoI;
+                                        TREE arbol = new TREE(parser.raiz, name);
+                                    :};
 
-DEF::= DEF OPM:om AUX:cl    {:
-                                //NodoTree nodo = new NodoTree(parser.id, b, null, null);
-                            :}
-    | OPM AUX {::}
-    | DEF AUX {::}
-    | AUX {::};
+DEF::= DEF:a OPM    {:
+                        RESULT = a;
+                    :}
+    | OPM:n        {: 
+                        RESULT = n;
+                    :};
 
-OPM::= operador:o multiplicativo:m  {:
-                                        if(m!=null){ Expresiones.add(m); RESULT = m; }
-                                        if(o!=null){ Expresiones.add(o); RESULT = o; }
+
+OPM::=  multiplicativo:m OPM:o      {:
+                                        NodoTree nodo = new NodoTree(parser.id, m, o, null);
+                                        parser.id++;
+                                        RESULT = nodo;
                                     :}
-    | multiplicativo:m operador:o   {:
-                                        if(m!=null){ Expresiones.add(m); RESULT = m; }
-                                        if(o!=null){ Expresiones.add(o); RESULT = o; }
-                                    :}
-    | multiplicativo:m  {:
-                            if(m!=null){ Expresiones.add(m); RESULT = m;}
-                        :}
-    | operador:o    {:
-                        if(o!=null){ Expresiones.add(o); RESULT = o; }
-                    };
 
+       | operador:o OPM:a OPM:b     {:
+                                        NodoTree nodo = new NodoTree(parser.id, o, a, b);
+                                        parser.id++;
+                                        RESULT = nodo;
+                                    :}
+        | AUX:a                 {:
+                                    NodoTree nodo = new NodoTree(parser.id, a, null, null);
+                                    parser.id++; parser.aux++;
+                                    RESULT = nodo;
+                                :};
 
 AUX::= conjunto:a   {:
                     if(a!=null){
-                    Expresiones.add(b);
-                    NodoTree nodo = new NodoTree(parser.id, b, null, null);
-                    parser.id++;
-                    RESULT = a;
+                        Expresiones.add(a);
+                        //NodoTree nodo = new NodoTree(parser.id, a, null, null);
+                        //parser.id++;
+                        RESULT = a;
                     }
-                    :}; //tipo nodo
-    | lexema:b  {:
-                if(b!=null){
-                Expresiones.add(b);
-                NodoTree nodo = new NodoTree(parser.id, b, null, null);
-                parser.id++;
-                RESULT = b;
-                }
-                :};
+                    :}
+        | lexema:b  {:
+                    if(b!=null){
+                        Expresiones.add(b);
+                        //NodoTree nodo = new NodoTree(parser.id, b, null, null);
+                        //parser.id++;
+                        RESULT = b;
+                    }
+                    :};
 
 
 EXPRESION::= EXPRESION id:a dospuntos lexema pcoma {:GUI.Interfaz.texto_consola+="Expresión reconocida: "+a+"\n";:}
