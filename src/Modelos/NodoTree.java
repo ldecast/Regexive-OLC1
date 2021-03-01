@@ -5,6 +5,7 @@
  */
 package Modelos;
 
+import Analizadores.parser;
 import java.util.Stack;
 
 /**
@@ -52,7 +53,10 @@ public class NodoTree{
     
     private void first(){
         if (izq == null && der == null) {
-            primeros.add(identificador);
+            if (valor=="#")
+                primeros.add(parser.aux);
+            else
+                primeros.add(identificador);
         }
         else if ("*".equals(valor) || "+".equals(valor) || "?".equals(valor)) {
             for (int i = 0; i < izq.primeros.size(); i++) {
@@ -82,7 +86,10 @@ public class NodoTree{
     
     private void last(){
         if (izq == null && der == null) {
-            ultimos.add(identificador);
+            if (valor=="#")
+                ultimos.add(parser.aux);
+            else
+                ultimos.add(identificador);
         }
         else if ("*".equals(valor) || "+".equals(valor) || "?".equals(valor)) {
             for (int i = 0; i < izq.ultimos.size(); i++) {

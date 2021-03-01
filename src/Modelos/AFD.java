@@ -45,10 +45,14 @@ public class AFD {
     }
     
     public String getCerradura(){
+        Stack<String> aux = new Stack<>();
         String cerradura = "";
         System.out.println(cerraduras.toString()+"MMMM");
         for (int i = 0; i < cerraduras.size(); i++) {
-            cerradura += cerraduras.elementAt(i);
+            if (!aux.contains(cerraduras.elementAt(i))) {
+                cerradura += cerraduras.elementAt(i);
+                aux.add(cerraduras.elementAt(i));
+            }
         }
         return cerradura;
     }

@@ -31,17 +31,16 @@ public class TREE {
     String nombre;
 
     public TREE(NodoTree raiz, String nombre) throws IOException {
-        parser.id = 1;
+        parser.id = 100;
         num = parser.aux;
         parser.aux  = 1;
         this.raiz = raiz;
         this.nombre = nombre;
         next_table(this.raiz);
         transition_table();
-//        toDot("ARBOLES");
+        toDot("ARBOLES");
 //        toDot("SIGUIENTES");
 //        toDot("TRANSICIONES");
-//        toDot("AFD");
         generate_AFD();
     }
     
@@ -338,11 +337,11 @@ class Estado {
         String content = "<TR>\n";
         content += "<TD BORDER=\"1\" COLSPAN=\"1\" HEIGHT=\"10\">S" + count + "</TD>\n";
         for (int i = 0; i < siguiente.siguientes.size(); i++) {
-            if (siguiente.siguientes.elementAt(i) == TREE.num) {
-                content += "<TD BORDER=\"1\" COLSPAN=\"1\" WIDTH=\"30\" HEIGHT=\"10\">{" + siguiente.siguientes.elementAt(i) + "}: #</TD>\n";
+            if (siguiente.identificador == TREE.num) {
+                content += "<TD BORDER=\"1\" COLSPAN=\"1\" WIDTH=\"30\" HEIGHT=\"10\">{" + siguiente.identificador + "}: #</TD>\n";
             } else {
-                TREE.findValue(root, siguiente.siguientes.elementAt(i));
-                content += "<TD BORDER=\"1\" COLSPAN=\"1\" WIDTH=\"30\" HEIGHT=\"10\">{" + siguiente.siguientes.elementAt(i) + "}: " + TREE.tmpValores.pop() + "</TD>\n";
+                TREE.findValue(root, siguiente.identificador);
+                content += "<TD BORDER=\"1\" COLSPAN=\"1\" WIDTH=\"30\" HEIGHT=\"10\">{" + siguiente.identificador + "}: " + TREE.tmpValores.pop() + "</TD>\n";
             }
         }
         content += "</TR>\n";
