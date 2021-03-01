@@ -77,7 +77,7 @@ public class NodoTree{
                 }
             }
         }
-        System.out.println(primeros.toString()+"primeros"+this.valor);
+        //System.out.println(primeros.toString()+"primeros"+this.valor);
     }
     
     private void last(){
@@ -107,7 +107,7 @@ public class NodoTree{
                 ultimos.add(der.ultimos.elementAt(i));
             }
         }
-        System.out.println(ultimos.toString()+"ultimos"+this.valor);
+        //System.out.println(ultimos.toString()+"ultimos"+this.valor);
     }
  
     
@@ -119,7 +119,7 @@ public class NodoTree{
             id = String.valueOf(numeral); first=last="["+String.valueOf(numeral)+"]";
         } 
         else{
-            id = valor; first=primeros.toString(); last=ultimos.toString();
+            id = String.valueOf(identificador); first=primeros.toString(); last=ultimos.toString();
         }
         try {
             if (der.valor == "#") {
@@ -136,7 +136,7 @@ public class NodoTree{
                     + "<TD BORDER=\"0\" COLSPAN=\"1\" STYLE=\"ROUNDED\" WIDTH=\"75\" HEIGHT=\"25\">"+first+"</TD>\n"
                     + "<TD BORDER=\"0\" COLSPAN=\"1\" STYLE=\"ROUNDED\" WIDTH=\"75\" HEIGHT=\"25\">"+last+"</TD>\n"
                     + "</TR>\n<TR>\n"
-                    + "<TD BORDER=\"0\" COLSPAN=\"2\" STYLE=\"ROUNDED\" HEIGHT=\"25\">"+id+"</TD>\n</TR>"
+                    + "<TD BORDER=\"0\" COLSPAN=\"2\" STYLE=\"ROUNDED\" HEIGHT=\"25\"><B>"+id+"</B></TD>\n</TR>"
                     + "</TABLE>> xlabel=<<font color=\"Crimson\">"+n_a+"</font>>];\n";
         } else {
             content = "nodo" + identificador + " [ label =<\n"
