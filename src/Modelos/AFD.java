@@ -44,6 +44,15 @@ public class AFD {
         return transition;
     }
     
+    public String getCerradura(){
+        String cerradura = "";
+        System.out.println(cerraduras.toString()+"MMMM");
+        for (int i = 0; i < cerraduras.size(); i++) {
+            cerradura += cerraduras.elementAt(i);
+        }
+        return cerradura;
+    }
+    
     public void getDot() throws IOException{
         String contenido = "";
         contenido += "digraph D {\n"
@@ -53,6 +62,7 @@ public class AFD {
         + "    edge[arrowhead=vee color=\"#F5F5F5\" penwidth=\"1.5\"];\n";
         contenido += getNodes();
         contenido += getTransition();
+        contenido += getCerradura();
         contenido += "\n}";
         
         File archivo = new File("src\\AFD_201902238\\"+nombre+"_"+GUI.Interfaz.fname+".dot");
