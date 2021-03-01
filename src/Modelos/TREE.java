@@ -36,12 +36,12 @@ public class TREE {
         this.raiz = raiz;
         this.nombre = nombre;
         next_table(this.raiz);
-        transition_table(this.raiz);
+        transition_table();
 //        toDot("ARBOLES");
 //        toDot("SIGUIENTES");
-        toDot("TRANSICIONES");
+//        toDot("TRANSICIONES");
 //        toDot("AFD");
-        //generate_AFD();
+        generate_AFD();
     }
     
     private void next_table(NodoTree root) {
@@ -124,32 +124,8 @@ public class TREE {
 //        return temp.contains(sigs);
     }
     
-    private void transition_table(NodoTree root) {
-//        try{
-//            if ("#".equals(root.der.valor)) {
-////                estados.add(new Estado(root.primeros));
-////                count++;
-//            }
-//        } catch(Exception e){}
-        //else {
-//            Stack <Stack<Integer>> temp = new Stack<>();
-//            Estado tmp;
-//            Siguiente aux;
-//            for (int i = 0; i < siguientes.size(); i++) {
-//                aux = siguientes.elementAt(i);
-//                tmp = new Estado(aux.siguientes);
-//                if (checkTransition(temp, aux.siguientes)) {
-////                    System.out.println(aux.siguientes.toString()+"ya estaba"+i);
-//                    cerraduras.add(tmp);
-//                }
-//                else{
-//                    System.out.println(aux.siguientes.toString()+"no estaba"+i);
-//                    estados.add(tmp);
-//                    temp.add(aux.siguientes);
-//                }
-//            }
-            
-            Stack<Integer> aux;
+    private void transition_table() {
+        Stack<Integer> aux;
         for (int i = 0; i < siguientes.size(); i++) {
             aux = siguientes.elementAt(i).siguientes;
             Set<Integer> set = new HashSet<>(aux);
@@ -162,20 +138,36 @@ public class TREE {
                 tmpCerraduras.add(aux);
             }
         }
-            
-//            if (root.izq != null)
-//                transition_table(root.izq);
-//            if (root.der != null)
-//                transition_table(root.der);
-        //}
     }
     
-    private void generate_AFD(){
-        AFD automata = new AFD();
+    private void siguienteDe(Estado estado){
+        
+    }
+    
+    private void generate_AFD() throws IOException{
+        AFD automata = new AFD(nombre);
         String estado, transicion, cerradura;
-//        for (int i = 0; i < estados.size(); i++) {
-//            estado = "S" + estados.elementAt(i).estadoActual;
-//            transicion = findValue(raiz, estados.elementAt(i).estadoActual);
+        for (int i = 0; i < tmpTransiciones.size(); i++) {
+            for (int j = 0; j < tmpTransiciones.elementAt(i).size(); j++) {
+                findValue(raiz, tmpTransiciones.elementAt(i).elementAt(j));
+            }
+        }
+        System.out.println(tmpValores.toString());
+        for (int i = 0; i < tmpValores.size(); i++) {
+            estado = "S" + i;
+            transicion = tmpValores.elementAt(i);
+            automata.nodos.add(new NodoAFD(estado, transicion));
+        }
+        tmpValores.clear();
+        
+//        for (int i = 0; i < cerraduras.size(); i++) {
+//            for (int j = 0; j < cerraduras.elementAt(i).estadosSiguientes.size(); j++) {
+//                findValue(raiz, cerraduras.elementAt(i).estadosSiguientes.elementAt(j));
+//            }
+//        }
+//        for (int i = 0; i < tmpValores.size(); i++) {
+//            estado = "S" + i;
+//            cerradura = tmpValores.elementAt(i);
 //            automata.nodos.add(new NodoAFD(estado, transicion));
 //        }
 //        for (int i = 0; i < cerraduras.size(); i++) {
@@ -299,10 +291,7 @@ public class TREE {
         content += "</TR>\n";
         tmpValores.clear();
         for (int i = 0; i < tmpTransiciones.size(); i++) {
-//            Estado tmp = estados.elementAt(i);
             Estado tmp = new Estado(tmpTransiciones.elementAt(i));
-//            findValue(raiz, tmp.identificador);
-//            content += tmp.getNextTableDot(tmpValores.pop());
             content += tmp.getTransitionDot(raiz, i+1);
 //            System.out.println("estado actual: S"+tmp.estadoActual+"estados siguientes: "+tmp.estadosSiguientes.toString());
         }
@@ -318,11 +307,11 @@ public class TREE {
 
 class Estado {
 
-//    public int estadoActual;
+    public int estadoActual;
     public Stack<Integer> estadosSiguientes = new Stack<>();
 
-    public Estado(Stack<Integer> estadosSiguientes) {
-//        this.estadoActual = estadoActual;
+    public Estado(Stack<Integer> estadosSiguientes, int estadoActual) {
+        this.estadoActual = estadoActual;
         Set<Integer> set = new HashSet<>(estadosSiguientes);
         this.estadosSiguientes.addAll(set);
     }
@@ -348,7 +337,6 @@ class Siguiente {
     
     public int identificador;
     public Stack<Integer> siguientes = new Stack<>();
-    //public String valor;
 
     public Siguiente(int identificador, Stack<Integer> siguiente) {
         this.identificador = identificador;
