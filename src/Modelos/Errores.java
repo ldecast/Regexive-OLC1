@@ -87,10 +87,10 @@ public class Errores {
     "<script src=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js\" integrity=\"sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI\" crossorigin=\"anonymous\"></script>\n"+
     "</body></html>";
             
-            try (FileWriter html = new FileWriter("src/ERRORES_201902238/"+filename+".html")) {
+            try (FileWriter html = new FileWriter("src/REPORTES/ERRORES_201902238/"+filename+".html")) {
                 html.write(contenido);
             }
-            File htmlFile = new File("src/ERRORES_201902238/"+filename+".html");
+            File htmlFile = new File("src/REPORTES/ERRORES_201902238/"+filename+".html");
             Desktop.getDesktop().browse(htmlFile.toURI());
         }
     }

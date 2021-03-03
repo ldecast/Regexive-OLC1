@@ -33,7 +33,14 @@ import java.io.IOException;
 import java.util.Stack;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import Modelos.*;
+import java.awt.image.BufferedImage;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.UnsupportedLookAndFeelException;
+import main.Main;
 
 /**
  *
@@ -42,8 +49,9 @@ import Modelos.*;
 public class Interfaz extends javax.swing.JFrame {
     // falta metodo para cargar todo al abrir un archivo
     public static String texto_consola = "";
-    public static String fname = "archivoPrueba";
-    public static String funcion = "FUNCION";
+    public static String fname = "NewFile";
+    public static String funcion = "";
+    public static boolean generated = false;
     public static Stack<String> expName = new Stack<>();
             
     /**
@@ -74,9 +82,10 @@ public class Interfaz extends javax.swing.JFrame {
         txtSalida = new javax.swing.JTextPane();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTree = new javax.swing.JTree();
-        comboBox = new javax.swing.JComboBox<>();
-        imgPanel = new javax.swing.JPanel();
         jSeparator1 = new javax.swing.JSeparator();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        imgPanel = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
         BarraMenu = new javax.swing.JMenuBar();
         FileMenu = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -170,6 +179,7 @@ public class Interfaz extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(204, 204, 204));
         jLabel2.setText("Salida");
 
+        txtSalida.setEditable(false);
         txtSalida.setBackground(new java.awt.Color(20, 29, 38));
         txtSalida.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(47, 47, 47)));
         Border border2 = txtSalida.getBorder();
@@ -212,31 +222,27 @@ public class Interfaz extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(jTree);
 
-        comboBox.setBackground(new java.awt.Color(61, 64, 65));
-        comboBox.setFont(new java.awt.Font("Century Gothic", 0, 16)); // NOI18N
-        comboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ver imágenes...", "Árboles", "Tablas de siguientes", "Tablas de transiciones", "Autómatas" }));
-        comboBox.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                comboBoxKeyPressed(evt);
-            }
-        });
+        jSeparator1.setBackground(new java.awt.Color(20, 29, 38));
+        jSeparator1.setForeground(new java.awt.Color(20, 29, 38));
+        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
         imgPanel.setBackground(new java.awt.Color(20, 29, 38));
+
+        jLabel3.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel3.setForeground(new java.awt.Color(0, 0, 0));
 
         javax.swing.GroupLayout imgPanelLayout = new javax.swing.GroupLayout(imgPanel);
         imgPanel.setLayout(imgPanelLayout);
         imgPanelLayout.setHorizontalGroup(
             imgPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 541, Short.MAX_VALUE)
+            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 541, Short.MAX_VALUE)
         );
         imgPanelLayout.setVerticalGroup(
             imgPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
         );
 
-        jSeparator1.setBackground(new java.awt.Color(20, 29, 38));
-        jSeparator1.setForeground(new java.awt.Color(20, 29, 38));
-        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        jScrollPane4.setViewportView(imgPanel);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -271,35 +277,31 @@ public class Interfaz extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(imgPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(comboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                .addContainerGap(15, Short.MAX_VALUE))
+                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(19, 19, 19)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(comboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(imgPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnAutomatas, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnAnalizar, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jSeparator1)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(jLabel1)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btnAutomatas, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnAnalizar, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jSeparator1)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE))
+                    .addComponent(jScrollPane4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         BarraMenu.setBackground(new java.awt.Color(60, 64, 65));
@@ -332,6 +334,11 @@ public class Interfaz extends javax.swing.JFrame {
         jMenuItem3.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         jMenuItem3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/icons/Save-icon.png"))); // NOI18N
         jMenuItem3.setText("  Guardar como...                   Ctrl+Shift+S");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
         FileMenu.add(jMenuItem3);
 
         jMenuItem4.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
@@ -363,11 +370,21 @@ public class Interfaz extends javax.swing.JFrame {
         jMenuItem7.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         jMenuItem7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/icons/Window-new-icon.png"))); // NOI18N
         jMenuItem7.setText("  Nueva ventana                     Ctrl+N");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
         VentanaMenu.add(jMenuItem7);
 
         jMenuItem8.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         jMenuItem8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/icons/Close-2-icon.png"))); // NOI18N
         jMenuItem8.setText("  Cerrar ventana                      Alt+W");
+        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem8ActionPerformed(evt);
+            }
+        });
         VentanaMenu.add(jMenuItem8);
 
         BarraMenu.add(VentanaMenu);
@@ -465,11 +482,14 @@ public class Interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_BtnExitMouseClicked
 
     private void btnAutomatasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAutomatasActionPerformed
-        funcion = "GENERAR AUTOMATAS";
-        texto_consola="";
-        Modelos.Errores.lista_errores.clear();
-        expName.clear();
-        txtSalida.setText("");
+        if ("".equals(txtEntrada.getText())) {
+            JOptionPane.showMessageDialog(this, " Debe digitar una entrada válida", " Archivo vacío", JOptionPane.WARNING_MESSAGE);
+        } else {
+            funcion = "GENERAR AUTOMATAS";
+            texto_consola = "";
+            Modelos.Errores.lista_errores.clear();
+            expName.clear();
+            txtSalida.setText("");
 //        try {
             String path = txtEntrada.getText();
             Analizadores.parser sintactico;
@@ -481,10 +501,13 @@ public class Interfaz extends javax.swing.JFrame {
 //        } catch (Exception e) {
 //            txtSalida.setText(e.toString());
 //        }
+            generated = true;
+        }
     }//GEN-LAST:event_btnAutomatasActionPerformed
-
+    
     private void btnAnalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizarActionPerformed
-        funcion = "ANALIZAR ENTRADAS";
+        if (generated) {
+            funcion = "ANALIZAR ENTRADAS";
         texto_consola="";
         Modelos.Errores.lista_errores.clear();
         txtSalida.setText("");
@@ -495,10 +518,13 @@ public class Interfaz extends javax.swing.JFrame {
             sintactico.parse();
             Modelos.Errores.reportarErrores(fname);
             txtSalida.setText(texto_consola);
-            addTreeNode(); //modificar ese metodo
 //        } catch (Exception e) {
 //            txtSalida.setText(e.toString());
 //        }
+        } else {
+            JOptionPane.showMessageDialog(this, "No se encuentran autómatas generados\n", " Intente de nuevo", JOptionPane.WARNING_MESSAGE);
+        }
+        
     }//GEN-LAST:event_btnAnalizarActionPerformed
 
     private void txtEntradaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEntradaKeyPressed
@@ -513,10 +539,6 @@ public class Interfaz extends javax.swing.JFrame {
         formKeyPressed(evt);
     }//GEN-LAST:event_txtSalidaKeyPressed
 
-    private void comboBoxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_comboBoxKeyPressed
-        formKeyPressed(evt);
-    }//GEN-LAST:event_comboBoxKeyPressed
-
     private void btnAutomatasKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnAutomatasKeyPressed
         formKeyPressed(evt);
     }//GEN-LAST:event_btnAutomatasKeyPressed
@@ -530,7 +552,7 @@ public class Interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_jTreeKeyPressed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
-        // TODO add your handling code here:
+        closeFile();
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     private void jTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTreeMouseClicked
@@ -540,31 +562,60 @@ public class Interfaz extends javax.swing.JFrame {
                 if (node == null) {
                     return;
                 }
-                File f = null;
                 Desktop desktop = Desktop.getDesktop();
                 switch (node.getParent().toString()) {
                     case "Árboles":
-                        f = new File("src\\ARBOLES_201902238\\" + node.toString() + ".svg");
-                        if (evt.getClickCount() == 1) System.out.println("prueba"); //imprimir en panel
-                        if (evt.getClickCount() == 2) desktop.open(f);
+                        if (evt.getClickCount() == 1) {
+                            BufferedImage image = ImageIO.read(new File("src/GUI/IMAGENES/ARBOLES/" + node.toString() + ".png"));
+                            jLabel3.setIcon(new ImageIcon(image));
+                            imgPanel.add(label);
+                        }
+                        if (evt.getClickCount() == 2) {
+                            desktop.open(new File("src\\REPORTES\\ARBOLES_201902238\\" + node.toString() + ".svg"));
+                        }
                         break;
                     case "Siguientes":
-                        f = new File("src\\SIGUIENTES_201902238\\" + node.toString() + ".svg");
-                        if (evt.getClickCount() == 1) System.out.println("prueba"); //imprimir en panel
-                        if (evt.getClickCount() == 2) desktop.open(f);
+                        if (evt.getClickCount() == 1) {
+                            BufferedImage image = ImageIO.read(new File("src/GUI/IMAGENES/SIGUIENTES/" + node.toString() + ".png"));
+                            jLabel3.setIcon(new ImageIcon(image));
+                            imgPanel.add(label);
+                        }
+                        if (evt.getClickCount() == 2) {
+                            desktop.open(new File("src\\REPORTES\\SIGUIENTES_201902238\\" + node.toString() + ".svg"));
+                        }
                         break;
                     case "Transiciones":
-                        f = new File("src\\TRANSICIONES_201902238\\" + node.toString() + ".svg");
-                        if (evt.getClickCount() == 1) System.out.println("prueba"); //imprimir en panel
-                        if (evt.getClickCount() == 2) desktop.open(f);
+                        if (evt.getClickCount() == 1) {
+                            BufferedImage image = ImageIO.read(new File("src/GUI/IMAGENES/TRANSICIONES/" + node.toString() + ".png"));
+                            jLabel3.setIcon(new ImageIcon(image));
+                            imgPanel.add(label);
+                        }
+                        if (evt.getClickCount() == 2) {
+                            desktop.open(new File("src\\REPORTES\\TRANSICIONES_201902238\\" + node.toString() + ".svg"));
+                        }
                         break;
                     case "Autómatas":
-                        if (node.toString().startsWith("AFND"))
-                            f = new File("src\\AFND_201902238\\" + node.toString().substring(4) + ".svg");
-                        else
-                            f = new File("src\\AFD_201902238\\" + node.toString().substring(3) + ".svg");
-                        if (evt.getClickCount() == 1) System.out.println("prueba"); //imprimir en panel
-                        if (evt.getClickCount() == 2) desktop.open(f);
+                        if (evt.getClickCount() == 1) {
+                            System.out.println("src/GUI/IMAGENES/AFND/" + node.toString() + ".png");
+                            if (node.toString().startsWith("AFND")) {
+                                BufferedImage image = ImageIO.read(new File("src/GUI/IMAGENES/AFND/" + node.toString().substring(4) + ".png"));
+                                jLabel3.setIcon(new ImageIcon(image));
+                                imgPanel.add(label);
+                            } else {
+                                BufferedImage image = ImageIO.read(new File("src/GUI/IMAGENES/AFD/" + node.toString().substring(3) + ".png"));
+                                jLabel3.setIcon(new ImageIcon(image));
+                                imgPanel.add(label);
+                            }
+                        }
+                        if (evt.getClickCount() == 2) {
+                            if (node.toString().startsWith("AFND")) {
+                                File f = new File("src\\REPORTES\\AFND_201902238\\" + node.toString().substring(4) + ".svg");
+                                desktop.open(f);
+                            } else {
+                                File f = new File("src\\REPORTES\\AFD_201902238\\" + node.toString().substring(3) + ".svg");
+                                desktop.open(f);
+                            }
+                        }
                         break;
                 }
             }
@@ -572,7 +623,26 @@ public class Interfaz extends javax.swing.JFrame {
             System.err.println(e.toString());
         }
     }//GEN-LAST:event_jTreeMouseClicked
-    
+
+    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_jMenuItem8ActionPerformed
+
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+        try {
+            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+            Interfaz vp = new Interfaz();
+            vp.setVisible(true);
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        //Guardar como
+        
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
     private void addTreeNode(){
         DefaultTreeModel model = (DefaultTreeModel)jTree.getModel();
         DefaultMutableTreeNode root = (DefaultMutableTreeNode)model.getRoot();
@@ -608,6 +678,23 @@ public class Interfaz extends javax.swing.JFrame {
         GUI.Interfaz.expName.add(String.valueOf(type) + item);
     }
     
+    public void closeFile(){
+        txtEntrada.setText("");
+        txtSalida.setText("");
+        jLabel3.setIcon(null);
+        DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("JTree");
+        DefaultMutableTreeNode treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Árboles");
+        treeNode1.add(treeNode2);
+        treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Siguientes");
+        treeNode1.add(treeNode2);
+        treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Transiciones");
+        treeNode1.add(treeNode2);
+        treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Autómatas");
+        treeNode1.add(treeNode2);
+        jTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
+        fname = "NewFile";
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu AboutMenu;
     private javax.swing.JMenuBar BarraMenu;
@@ -616,10 +703,10 @@ public class Interfaz extends javax.swing.JFrame {
     private javax.swing.JMenu VentanaMenu;
     private javax.swing.JButton btnAnalizar;
     private javax.swing.JButton btnAutomatas;
-    private javax.swing.JComboBox<String> comboBox;
     private javax.swing.JPanel imgPanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
@@ -632,6 +719,7 @@ public class Interfaz extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTree jTree;
     private javax.swing.JTextPane txtEntrada;

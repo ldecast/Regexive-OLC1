@@ -170,7 +170,6 @@ public class TREE {
             }
         }
         tmpValores.clear();
-
         automata.getDot();
     }
     
@@ -189,7 +188,7 @@ public class TREE {
     
     private void toDot(String tipo) throws IOException {
         String contenido = "";
-        contenido += "digraph D {\n"
+        contenido += "digraph ARBOL {\n"
         + "    graph[bgcolor=\"#141D26\"]\n"
         + "    rankdir=\"TB\";\n"
         + "    node [shape=plaintext margin=\"0\" fontname= \"Century Gothic\" fontsize=\"14\"];\n"
@@ -197,45 +196,25 @@ public class TREE {
         switch (tipo){
             case "ARBOLES":
                 contenido += raiz.getDot(num);
+                GUI.Interfaz.addToTree(nombre,0);
                 break;
             case "SIGUIENTES":
                 contenido += dotNextTable();
+                GUI.Interfaz.addToTree(nombre,1);
                 break;
             case "TRANSICIONES":
                 contenido += dotTransition();
+                GUI.Interfaz.addToTree(nombre,2);
                 break;
         }
         contenido += "\n}";
         
-        File archivo = new File("src\\"+tipo+"_201902238\\"+nombre+"_"+GUI.Interfaz.fname+".dot");
+        File archivo = new File("src\\REPORTES\\"+tipo+"_201902238\\"+nombre+"_"+GUI.Interfaz.fname+".dot");
         try (FileWriter escritor = new FileWriter(archivo)) {
             escritor.write(contenido);
         }
-        GUI.Interfaz.addToTree(nombre,3);
         generateSVG(tipo);
-    }
-    
-    private void generateSVG(String tipo) throws IOException {
-    	String dotPath = "C:\\Program Files (x86)\\Graphviz2.38\\bin\\dot.exe";
-
-    	String fileInputPath = "src\\"+tipo+"_201902238\\"+nombre+"_"+GUI.Interfaz.fname+".dot";
- 
-    	String fileOutputPath = "src\\"+tipo+"_201902238\\"+nombre+"_"+GUI.Interfaz.fname+".svg";
-
-    	String tParam = "-Tsvg";
-
-    	String tOParam = "-o";
-
-    	String[] cmd = new String[5];
-    	cmd[0] = dotPath;
-    	cmd[1] = tParam;
-    	cmd[2] = fileInputPath;
-    	cmd[3] = tOParam;
-    	cmd[4] = fileOutputPath;
-
-    	Runtime rt = Runtime.getRuntime();
-
-    	rt.exec(cmd);
+        generatePNG(tipo);
     }
     
     private String dotNextTable(){
@@ -286,6 +265,52 @@ public class TREE {
         + "</TR>\n"
         + "</TABLE>>];";
         return content;
+    }
+    
+    private void generateSVG(String tipo) throws IOException {
+    	String dotPath = "C:\\Program Files (x86)\\Graphviz2.38\\bin\\dot.exe";
+
+    	String fileInputPath = "src\\REPORTES\\"+tipo+"_201902238\\"+nombre+"_"+GUI.Interfaz.fname+".dot";
+ 
+    	String fileOutputPath = "src\\REPORTES\\"+tipo+"_201902238\\"+nombre+"_"+GUI.Interfaz.fname+".svg";
+
+    	String tParam = "-Tsvg";
+
+    	String tOParam = "-o";
+
+    	String[] cmd = new String[5];
+    	cmd[0] = dotPath;
+    	cmd[1] = tParam;
+    	cmd[2] = fileInputPath;
+    	cmd[3] = tOParam;
+    	cmd[4] = fileOutputPath;
+
+    	Runtime rt = Runtime.getRuntime();
+
+    	rt.exec(cmd);
+    }
+    
+    private void generatePNG(String tipo) throws IOException {
+    	String dotPath = "C:\\Program Files (x86)\\Graphviz2.38\\bin\\dot.exe";
+
+    	String fileInputPath = "src\\REPORTES\\"+tipo+"_201902238\\"+nombre+"_"+GUI.Interfaz.fname+".dot";
+ 
+    	String fileOutputPath = "src\\GUI\\IMAGENES\\"+tipo+"\\"+nombre+"_"+GUI.Interfaz.fname+".png";
+
+    	String tParam = "-Tpng";
+
+    	String tOParam = "-o";
+
+    	String[] cmd = new String[5];
+    	cmd[0] = dotPath;
+    	cmd[1] = tParam;
+    	cmd[2] = fileInputPath;
+    	cmd[3] = tOParam;
+    	cmd[4] = fileOutputPath;
+
+    	Runtime rt = Runtime.getRuntime();
+
+    	rt.exec(cmd);
     }
     
 }

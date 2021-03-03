@@ -311,15 +311,17 @@ class CUP$parser$actions {
 		int sleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
 		int sright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		NodoTree s = (NodoTree)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		  
-                                        NodoTree nodoNum = new NodoTree(parser.id, "#", null, null);
-                                        parser.id++;
-                                        NodoTree nodoI = new NodoTree(parser.id, ".", s, nodoNum);
-                                        parser.id++;
-                                        Expresiones.setName(name);
-                                        Expresiones.loadExp();
-                                        parser.raiz = nodoI;
-                                        TREE arbol = new TREE(parser.raiz, name);
+		  if (Interfaz.funcion == "GENERAR AUTOMATAS") {
+                                            NodoTree nodoNum = new NodoTree(parser.id, "#", null, null);
+                                            parser.id++;
+                                            NodoTree nodoI = new NodoTree(parser.id, ".", s, nodoNum);
+                                            parser.id++;
+                                            Expresiones.setName(name);
+                                            Expresiones.loadExp();
+                                            parser.raiz = nodoI;
+                                            TREE arbol = new TREE(parser.raiz, name);
+                                            Interfaz.texto_consola+="Autómatas generados para la expresión: "+name+"\n";
+                                        }
                                     
               CUP$parser$result = parser.getSymbolFactory().newSymbol("INFIJA",6, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -363,11 +365,12 @@ class CUP$parser$actions {
 		int oleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
 		int oright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		NodoTree o = (NodoTree)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-                                        //Expresiones.add(m);
-                                        NodoTree nodo = new NodoTree(parser.id, m, o, null);
-                                        parser.id++;
-                                        RESULT = nodo;
+		  if (Interfaz.funcion == "GENERAR AUTOMATAS") {
+                                            //Expresiones.add(m);
+                                            NodoTree nodo = new NodoTree(parser.id, m, o, null);
+                                            parser.id++;
+                                            RESULT = nodo;
+                                        }
                                     
               CUP$parser$result = parser.getSymbolFactory().newSymbol("OPM",8, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -386,11 +389,12 @@ class CUP$parser$actions {
 		int bleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
 		int bright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		NodoTree b = (NodoTree)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-                                        //Expresiones.add(o);
-                                        NodoTree nodo = new NodoTree(parser.id, o, a, b);
-                                        parser.id++;
-                                        RESULT = nodo;
+		  if (Interfaz.funcion == "GENERAR AUTOMATAS") {
+                                            //Expresiones.add(o);
+                                            NodoTree nodo = new NodoTree(parser.id, o, a, b);
+                                            parser.id++;
+                                            RESULT = nodo;
+                                        }
                                     
               CUP$parser$result = parser.getSymbolFactory().newSymbol("OPM",8, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -403,11 +407,12 @@ class CUP$parser$actions {
 		int bleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
 		int bright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		String b = (String)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-                                    //Expresiones.add(b);
-                                    NodoTree nodo = new NodoTree(parser.aux, b, null, null);
-                                    parser.aux++;
-                                    RESULT = nodo;
+		  if (Interfaz.funcion == "GENERAR AUTOMATAS") {
+                                        //Expresiones.add(b);
+                                        NodoTree nodo = new NodoTree(parser.aux, b, null, null);
+                                        parser.aux++;
+                                        RESULT = nodo;
+                                    }
                                 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("OPM",8, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -420,11 +425,12 @@ class CUP$parser$actions {
 		int aleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
 		int aright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		String a = (String)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-                                    //Expresiones.add(a);
-                                    NodoTree nodo = new NodoTree(parser.aux, a, null, null);
-                                    parser.aux++;
-                                    RESULT = nodo;
+		  if (Interfaz.funcion == "GENERAR AUTOMATAS") {
+                                        //Expresiones.add(a);
+                                        NodoTree nodo = new NodoTree(parser.aux, a, null, null);
+                                        parser.aux++;
+                                        RESULT = nodo;
+                                    }
                                 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("OPM",8, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -437,11 +443,12 @@ class CUP$parser$actions {
 		int cleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
 		int cright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		String c = (String)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-                                    //Expresiones.add(c);
-                                    NodoTree nodo = new NodoTree(parser.aux, c, null, null);
-                                    parser.aux++;
-                                    RESULT = nodo;
+		  if (Interfaz.funcion == "GENERAR AUTOMATAS") {
+                                        //Expresiones.add(c);
+                                        NodoTree nodo = new NodoTree(parser.aux, c, null, null);
+                                        parser.aux++;
+                                        RESULT = nodo;
+                                    }
                                 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("OPM",8, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -454,8 +461,12 @@ class CUP$parser$actions {
 		int aleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).left;
 		int aright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).right;
 		String a = (String)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-3)).value;
-		
-                                                        GUI.Interfaz.texto_consola+="Expresión reconocida: "+a+"\n";
+		  if (Interfaz.funcion == "ANALIZAR ENTRADAS") {
+                                                            Interfaz.texto_consola+="Expresión reconocida: "+a+"\n";
+                                                            
+                                                            
+                                                            Interfaz.texto_consola+="JSON de salida generado: "+a+"\n";
+                                                        }
                                                     
               CUP$parser$result = parser.getSymbolFactory().newSymbol("EXPRESION",3, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -468,8 +479,12 @@ class CUP$parser$actions {
 		int bleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).left;
 		int bright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).right;
 		String b = (String)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-3)).value;
-		
-                                                GUI.Interfaz.texto_consola+="Expresión reconocida: "+b+"\n";
+		  if (Interfaz.funcion == "ANALIZAR ENTRADAS") {
+                                                    Interfaz.texto_consola+="Expresión reconocida: "+b+"\n";
+                                                    
+                                                    
+                                                    Interfaz.texto_consola+="JSON de salida generado: "+b+"\n";
+                                                }
                                             
               CUP$parser$result = parser.getSymbolFactory().newSymbol("EXPRESION",3, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }

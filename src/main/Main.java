@@ -39,7 +39,7 @@ public class Main {
             String opcCUP[] = {"-destdir", ruta, "-parser", "parser", ruta + "Sintactico.cup"};
             java_cup.Main.main(opcCUP);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println(e.toString());
         }
     }
 }

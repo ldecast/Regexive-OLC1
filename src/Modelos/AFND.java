@@ -208,22 +208,46 @@ public class AFND { //leer de derecha a izquierda e ir agrupando por segmentos e
         contenido += complemento;
         contenido += "\n}";
         
-        File archivo = new File("src\\AFND_201902238\\"+nombre+"_"+GUI.Interfaz.fname+".dot");
+        File archivo = new File("src\\REPORTES\\AFND_201902238\\"+nombre+"_"+GUI.Interfaz.fname+".dot");
         try (FileWriter escritor = new FileWriter(archivo)) {
             escritor.write(contenido);
         }
         GUI.Interfaz.addToTree(nombre,3);
         generateSVG();
+        generatePNG();
     }
     
     private void generateSVG() throws IOException{
     	String dotPath = "C:\\Program Files (x86)\\Graphviz2.38\\bin\\dot.exe";
 
-    	String fileInputPath = "src\\AFND_201902238\\"+nombre+"_"+GUI.Interfaz.fname+".dot";
+    	String fileInputPath = "src\\REPORTES\\AFND_201902238\\"+nombre+"_"+GUI.Interfaz.fname+".dot";
 
-    	String fileOutputPath = "src\\AFND_201902238\\"+nombre+"_"+GUI.Interfaz.fname+".svg";
+    	String fileOutputPath = "src\\REPORTES\\AFND_201902238\\"+nombre+"_"+GUI.Interfaz.fname+".svg";
 
     	String tParam = "-Tsvg";
+
+    	String tOParam = "-o";
+
+    	String[] cmd = new String[5];
+    	cmd[0] = dotPath;
+    	cmd[1] = tParam;
+    	cmd[2] = fileInputPath;
+    	cmd[3] = tOParam;
+    	cmd[4] = fileOutputPath;
+
+    	Runtime rt = Runtime.getRuntime();
+
+    	rt.exec(cmd);
+    }
+    
+    private void generatePNG() throws IOException {
+    	String dotPath = "C:\\Program Files (x86)\\Graphviz2.38\\bin\\dot.exe";
+
+    	String fileInputPath = "src\\REPORTES\\AFND_201902238\\"+nombre+"_"+GUI.Interfaz.fname+".dot";
+ 
+    	String fileOutputPath = "src\\GUI\\IMAGENES\\AFND\\"+nombre+"_"+GUI.Interfaz.fname+".png";
+
+    	String tParam = "-Tpng";
 
     	String tOParam = "-o";
 

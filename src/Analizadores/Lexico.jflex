@@ -28,7 +28,8 @@ import Modelos.*;
 LineTerminator = \r|\n|\r\n
 InputCharacter = [^\r\n]
 WhiteSpace     = {LineTerminator} | [ \t\f]
-//blancos = [ \t\r\n]+
+Alternativo = [ \t\r\n]
+B = {WhiteSpace}+ | {Alternativo}+
 
 Comment = {TraditionalComment}
           | {EndOfLineComment}
@@ -37,10 +38,17 @@ TraditionalComment   = "<!" [^*] ~"!>" | "<!" "!"+ ">"
 EndOfLineComment     = "//" {InputCharacter}* {LineTerminator}?
 
 prcon = "CONJ"
-virgulilla = " "*"~"" "*
+guion = "-"
+pico = ">"
+virgulilla = "~"
+coma = ","
+porcentaje = {B}*"%"{B}*
+labre = "{"
+lcierra = "}"
 
-operador = " "*"."" "* | " "*"|"" "*
-multiplicativo = " "*"*"" "* | " "*"+"" "* | " "*"?"" "*
+deriva = {guion}{B}*{pico}
+operador = "." | "|"
+multiplicativo = "*" | "+" | "?"
 especiales = "\\n" | "\\’" | "\\”" | "\\'"
 
 letra = [a-zA-Z]
@@ -50,36 +58,31 @@ identificador = [:jletter:] [:jletterdigit:]*
 
 lexema = \"[^\"]*\" | \“[^\”]*\”
 
-notacionL = {letra}{virgulilla}{letra} | ({letra}",")*{letra}
-notacionD = {digito}{virgulilla}{digito} | ({digito}",")*{digito}
-notacionA = ([\040-\057] | [\072-\100] | [\133-\140] | [\173-\175]){virgulilla}([\040-\057] | [\072-\100] | [\133-\140] | [\173-\175]) | (([\040-\057] | [\072-\100] | [\133-\140] | [\173-\175])",")*([\040-\057] | [\072-\100] | [\133-\140] | [\173-\175])
-
-porcentajes = " "*"%"" "*{LineTerminator}*
+notacionL = {letra}{virgulilla}{letra} | ({letra}{coma})*{letra}
+notacionD = {digito}{virgulilla}{digito} | ({digito}{coma})*{digito}
+notacionA = ([\040-\057] | [\072-\100] | [\133-\140] | [\173-\175]){virgulilla}([\040-\057] | [\072-\100] | [\133-\140] | [\173-\175]) | (([\040-\057] | [\072-\100] | [\133-\140] | [\173-\175]){coma})*([\040-\057] | [\072-\100] | [\133-\140] | [\173-\175])
 
 
-
-conjuntoo = " "*"{"" "*{identificador}" "*"}"" "*
+conjuntoo = {labre}{identificador}{lcierra}
 
 %{
     
 %}
     
 %%
+\n {yycolumn=1;}
+{B} {/*Se ignoran*/}
+{Comment} {/*Se ignoran*/}
 
-" "*{prcon}" "* {return new Symbol(sym.prconj,yycolumn,yyline,yytext());}
-" "*";"" "* {return new Symbol(sym.pcoma,yycolumn,yyline,yytext());}
-" "*":"" "* {return new Symbol(sym.dospuntos,yycolumn,yyline,yytext());}
-" "*"-"" "*">"" "* {return new Symbol(sym.deriva,yycolumn,yyline,yytext());}
-" "*"{"" "* {return new Symbol(sym.labre,yycolumn,yyline,yytext());}
-" "*"}"" "* {return new Symbol(sym.lcierra,yycolumn,yyline,yytext());}
+{prcon} {return new Symbol(sym.prconj,yycolumn,yyline,yytext());}
+";" {return new Symbol(sym.pcoma,yycolumn,yyline,yytext());}
+":" {return new Symbol(sym.dospuntos,yycolumn,yyline,yytext());}
+{deriva} {return new Symbol(sym.deriva,yycolumn,yyline,yytext());}
+{labre} {return new Symbol(sym.labre,yycolumn,yyline,yytext());}
+{lcierra} {return new Symbol(sym.lcierra,yycolumn,yyline,yytext());}
 {operador} {Expresiones.add(yytext()); return new Symbol(sym.operador,yycolumn,yyline,yytext());}
 {multiplicativo} {Expresiones.add(yytext()); return new Symbol(sym.multiplicativo,yycolumn,yyline,yytext());}
-{porcentajes}{4} {return new Symbol(sym.porcentajes,yycolumn,yyline,yytext());}
-
-\n {yycolumn=1;}
-//{blancos} {/*Se ignoran*/}
-{WhiteSpace} {/*Se ignoran*/}
-{Comment} {/*Se ignoran*/}
+{porcentaje}{4} {return new Symbol(sym.porcentajes,yycolumn,yyline,yytext());}
 
 {notacionA} {
     //System.out.println("NOTACION SIMBOLO: "+yytext());
@@ -125,4 +128,3 @@ conjuntoo = " "*"{"" "*{identificador}" "*"}"" "*
             GUI.Interfaz.texto_consola+="<<<Se encontraron errores léxicos en la entrada>>>\n";
             Modelos.Errores.lista_errores.add(new Errores("Léxico", yytext(), (yyline+1), (yycolumn+1)));
     }
-
