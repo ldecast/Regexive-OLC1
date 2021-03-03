@@ -34,12 +34,16 @@ import java.util.Stack;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
+import javax.swing.JFileChooser;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import main.Main;
 
 /**
@@ -50,6 +54,7 @@ public class Interfaz extends javax.swing.JFrame {
     // falta metodo para cargar todo al abrir un archivo
     public static String texto_consola = "";
     public static String fname = "NewFile";
+    public static String path = "NewFile";
     public static String funcion = "";
     public static boolean generated = false;
     public static Stack<String> expName = new Stack<>();
@@ -342,8 +347,8 @@ public class Interfaz extends javax.swing.JFrame {
         FileMenu.add(jMenuItem3);
 
         jMenuItem4.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
-        jMenuItem4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/icons/File-Adobe-Dreamweaver-XML-01-icon.png"))); // NOI18N
-        jMenuItem4.setText("  Generar XML                         Ctrl+Enter");
+        jMenuItem4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/icons/app-json-icon.png"))); // NOI18N
+        jMenuItem4.setText("  Abrir directorio JSON");
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem4ActionPerformed(evt);
@@ -437,11 +442,29 @@ public class Interfaz extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        // TODO add your handling code here:
+        //Open file
+        if (!"NewFile".equals(fname)) {
+            if (JOptionPane.showConfirmDialog(this, "Perderá todos los datos que no haya guardado", " ¿Está seguro?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                openFile();
+            }
+        } else {
+            openFile();
+        }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        // TODO add your handling code here:
+        //Update file
+        if ("NewFile".equals(fname)) {
+            saveAs();
+        }
+        else{
+            File file = new File(path);
+            try (FileWriter escritor = new FileWriter(file)) {
+                escritor.write(txtEntrada.getText());
+            } catch (IOException ex) {
+                Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void formKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyReleased
@@ -450,25 +473,56 @@ public class Interfaz extends javax.swing.JFrame {
 
     private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
         if (evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_A) {
-//                JOptionPane.showMessageDialog(this, "ctrl + A");
-                //Open method
+            //Open method
+            if (!"NewFile".equals(fname)) {
+                if (JOptionPane.showConfirmDialog(this, "Perderá todos los datos que no haya guardado", " ¿Está seguro?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    openFile();
+                }
+            } else {
+                openFile();
             }
-        else if (evt.isControlDown() && !evt.isShiftDown() && evt.getKeyCode() == KeyEvent.VK_S) {
-                JOptionPane.showMessageDialog(this, "ctrl + S");
-                //Save method
+        } else if (evt.isControlDown() && !evt.isShiftDown() && evt.getKeyCode() == KeyEvent.VK_S) {
+            //Update file
+            if ("NewFile".equals(fname)) {
+                saveAs();
+            } else {
+                File file = new File(path);
+                try (FileWriter escritor = new FileWriter(file)) {
+                    escritor.write(txtEntrada.getText());
+                } catch (IOException ex) {
+                    Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
-        else if (evt.isControlDown() && evt.isShiftDown() && evt.getKeyCode() == KeyEvent.VK_S) {
-                JOptionPane.showMessageDialog(this, "ctrl + shift + S");
-                //Save as method
+        } else if (evt.isControlDown() && evt.isShiftDown() && evt.getKeyCode() == KeyEvent.VK_S) {
+            saveAs();
+        } else if (evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_N) {
+            try {
+                UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+                Interfaz vp = new Interfaz();
+                vp.setVisible(true);
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
-        else if (evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                JOptionPane.showMessageDialog(this, "ctrl + Enter");
-                //XML method
+        } else if (evt.isAltDown() && evt.getKeyCode() == KeyEvent.VK_W) {
+            if (!"NewFile".equals(fname)) {
+                if (JOptionPane.showConfirmDialog(this, "Perderá todos los datos que no haya guardado", " ¿Está seguro?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    this.dispose();
+                }
+            } else {
+                this.dispose();
             }
+        }
     }//GEN-LAST:event_formKeyPressed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-        // TODO add your handling code here:
+        // Abrir directorio
+        try {
+            Desktop desktop = Desktop.getDesktop();
+            File dirToOpen = new File("C:\\Users\\luisd\\Documents\\NetBeansProjects\\REGEXIVE\\src\\REPORTES\\SALIDAS_201902238");
+            desktop.open(dirToOpen);
+        } catch (IOException ex) {
+            Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void BtnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnExitActionPerformed
@@ -476,7 +530,7 @@ public class Interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_BtnExitActionPerformed
 
     private void BtnExitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BtnExitMouseClicked
-        if (JOptionPane.showConfirmDialog(this,"¿Seguro que quieres salir?","   Salir",
+        if (JOptionPane.showConfirmDialog(this,"¿Seguro que quieres salir de todas las ventanas?","   Salir",
             JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION)
             System.exit(0);
     }//GEN-LAST:event_BtnExitMouseClicked
@@ -552,7 +606,14 @@ public class Interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_jTreeKeyPressed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
-        closeFile();
+        //Close file
+        if (!"NewFile".equals(fname)) {
+            if (JOptionPane.showConfirmDialog(this, "Perderá todos los datos que no haya guardado", " ¿Está seguro?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                closeFile();
+            }
+        } else {
+            closeFile();
+        }
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     private void jTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTreeMouseClicked
@@ -568,7 +629,6 @@ public class Interfaz extends javax.swing.JFrame {
                         if (evt.getClickCount() == 1) {
                             BufferedImage image = ImageIO.read(new File("src/GUI/IMAGENES/ARBOLES/" + node.toString() + ".png"));
                             jLabel3.setIcon(new ImageIcon(image));
-                            imgPanel.add(label);
                         }
                         if (evt.getClickCount() == 2) {
                             desktop.open(new File("src\\REPORTES\\ARBOLES_201902238\\" + node.toString() + ".svg"));
@@ -578,7 +638,6 @@ public class Interfaz extends javax.swing.JFrame {
                         if (evt.getClickCount() == 1) {
                             BufferedImage image = ImageIO.read(new File("src/GUI/IMAGENES/SIGUIENTES/" + node.toString() + ".png"));
                             jLabel3.setIcon(new ImageIcon(image));
-                            imgPanel.add(label);
                         }
                         if (evt.getClickCount() == 2) {
                             desktop.open(new File("src\\REPORTES\\SIGUIENTES_201902238\\" + node.toString() + ".svg"));
@@ -588,7 +647,6 @@ public class Interfaz extends javax.swing.JFrame {
                         if (evt.getClickCount() == 1) {
                             BufferedImage image = ImageIO.read(new File("src/GUI/IMAGENES/TRANSICIONES/" + node.toString() + ".png"));
                             jLabel3.setIcon(new ImageIcon(image));
-                            imgPanel.add(label);
                         }
                         if (evt.getClickCount() == 2) {
                             desktop.open(new File("src\\REPORTES\\TRANSICIONES_201902238\\" + node.toString() + ".svg"));
@@ -600,11 +658,9 @@ public class Interfaz extends javax.swing.JFrame {
                             if (node.toString().startsWith("AFND")) {
                                 BufferedImage image = ImageIO.read(new File("src/GUI/IMAGENES/AFND/" + node.toString().substring(4) + ".png"));
                                 jLabel3.setIcon(new ImageIcon(image));
-                                imgPanel.add(label);
                             } else {
                                 BufferedImage image = ImageIO.read(new File("src/GUI/IMAGENES/AFD/" + node.toString().substring(3) + ".png"));
                                 jLabel3.setIcon(new ImageIcon(image));
-                                imgPanel.add(label);
                             }
                         }
                         if (evt.getClickCount() == 2) {
@@ -639,8 +695,7 @@ public class Interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        //Guardar como
-        
+        saveAs();
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void addTreeNode(){
@@ -693,6 +748,48 @@ public class Interfaz extends javax.swing.JFrame {
         treeNode1.add(treeNode2);
         jTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
         fname = "NewFile";
+    }
+    
+    public void openFile(){
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(new FileNameExtensionFilter("olc file", "olc"));
+        fileChooser.setDialogTitle("Abrir archivo");
+        if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+            path = file.getAbsolutePath();
+            String name = file.getName();
+            fname = name.replaceFirst("[.][^.]+$", "");
+            try {
+                FileReader reader = new FileReader(path);
+                try (BufferedReader br = new BufferedReader(reader)) {
+                    txtEntrada.read(br, null);
+                }
+                txtEntrada.requestFocus();
+            } catch (IOException ex) {
+                Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    public void saveAs(){
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(new FileNameExtensionFilter("olc file", "olc"));
+        fileChooser.setDialogTitle("Guardar como...");
+        if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            String filename = fileChooser.getSelectedFile().toString();
+            if (!filename.endsWith(".olc")) {
+                filename += ".olc";
+            }
+            File file = new File(filename);
+            path = file.getAbsolutePath();
+            String name = file.getName();
+            fname = name.replaceFirst("[.][^.]+$", "");
+            try (FileWriter escritor = new FileWriter(file)) {
+                escritor.write(txtEntrada.getText());
+            } catch (IOException ex) {
+                Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
