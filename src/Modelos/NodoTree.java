@@ -29,7 +29,6 @@ public class NodoTree{
         this.anulable = isVoidable();
         first();
         last();
-//        System.out.println(this.valor);
     }
 
     private boolean isVoidable(){
@@ -53,7 +52,7 @@ public class NodoTree{
     
     private void first(){
         if (izq == null && der == null) {
-            if (valor=="#")
+            if ("#".equals(valor))
                 primeros.add(parser.aux);
             else
                 primeros.add(identificador);
@@ -81,12 +80,11 @@ public class NodoTree{
                 }
             }
         }
-        //System.out.println(primeros.toString()+"primeros"+this.valor);
     }
     
     private void last(){
         if (izq == null && der == null) {
-            if (valor=="#")
+            if ("#".equals(valor))
                 ultimos.add(parser.aux);
             else
                 ultimos.add(identificador);
@@ -114,7 +112,6 @@ public class NodoTree{
                 ultimos.add(der.ultimos.elementAt(i));
             }
         }
-        //System.out.println(ultimos.toString()+"ultimos"+this.valor);
     }
  
     
@@ -122,14 +119,14 @@ public class NodoTree{
         String content = "";
         String n_a, id, first, last;
         if(anulable) n_a = "A"; else n_a = "N";
-        if(valor=="#"){
+        if("#".equals(valor)){
             id = String.valueOf(numeral); first=last="["+String.valueOf(numeral)+"]";
         } 
         else{
             id = String.valueOf(identificador); first=primeros.toString(); last=ultimos.toString();
         }
         try {
-            if (der.valor == "#") {
+            if ("#".equals(der.valor)) {
                 last = "["+String.valueOf(numeral)+"]";
             }
         } catch (Exception e) {

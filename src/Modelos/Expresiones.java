@@ -23,18 +23,16 @@ public class Expresiones {
     }
     
     public static void setName(String x){
-        stack.add(0, x);
+//        stack.add(0, x);
     }
     public static void add(String x){
-        stack.add(x);
-        
+//        stack.add(x);
     }
     
     public static void loadExp() throws IOException{
-        String name = stack.remove(0);
+//        String name = stack.remove(0);
 //        AFND th = new AFND(name, stack);
-        //AE tree = mew AE(stack.elementAt(0), stack);
-        stack.clear();
+//        stack.clear();
     }
     
 }

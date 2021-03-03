@@ -5,7 +5,7 @@ import Modelos.*;
 
 parser code
 {:  
-    public static int id = 1;
+    public static int id = 100;
     public static int aux = 1;
     public static NodoTree raiz;
     //-----------------------------------------para errores sintacticos-------------------------------------------------------------------------------------------
@@ -27,9 +27,9 @@ parser code
 action code {:
 :}
 
-terminal String prconj, pcoma, dospuntos, labre, lcierra, porcentajes, id, lexema, notacionL, notacionD, notacionA, deriva, operador, multiplicativo, conjunto; //, var;
+terminal String prconj, pcoma, dospuntos, labre, lcierra, porcentajes, id, lexema, notacionL, notacionD, notacionA, deriva, operador, multiplicativo, conjuntoo, especial;
 
-non terminal String INICIO, EXP, SENTENCIA, EXPRESION, NOTACION, CONJUNTO, INFIJA, AUX;
+non terminal String INICIO, EXP, SENTENCIA, EXPRESION, NOTACION, CONJUNTO, INFIJA;
 non terminal NodoTree DEF, OPM;
 
 start with INICIO;
@@ -40,16 +40,10 @@ EXP::= labre SENTENCIA porcentajes EXPRESION:e lcierra {::};
 
 SENTENCIA::= SENTENCIA CONJUNTO pcoma {::}
             | SENTENCIA INFIJA pcoma    {:
-                                            //Expresiones.loadExp();
-                                            //parser.raiz = r;
-                                            //TREE arbol = new TREE(parser.raiz);
                                         :}
             | CONJUNTO pcoma            {:
-                                            //
                                         :}
-            | INFIJA:r pcoma            {: if(r!=null){
-                                            //Expresiones.loadExp(r);
-                                            }
+            | INFIJA:r pcoma            {: 
                                         :};
 
 CONJUNTO ::= prconj dospuntos id deriva NOTACION {::};
@@ -58,59 +52,77 @@ NOTACION ::= notacionL {::}
             | notacionA {::}
             | notacionD {::};
 
-INFIJA ::= id:name deriva DEF:s     {:  Expresiones.setName(name);
-                                        NodoTree nodoNum = new NodoTree(parser.id, "#", null, null);
-                                        parser.id++;
-                                        NodoTree nodoI = new NodoTree(parser.id, ".", s, nodoNum);
-                                        parser.id++;
-                                        Expresiones.setName(name);
-                                        parser.raiz = nodoI;
-                                        TREE arbol = new TREE(parser.raiz, name);
+INFIJA ::= id:name deriva DEF:s     {:  if (Interfaz.funcion == "GENERAR AUTOMATAS") {
+                                            NodoTree nodoNum = new NodoTree(parser.id, "#", null, null);
+                                            parser.id++;
+                                            NodoTree nodoI = new NodoTree(parser.id, ".", s, nodoNum);
+                                            parser.id++;
+                                            Expresiones.setName(name);
+                                            Expresiones.loadExp();
+                                            parser.raiz = nodoI;
+                                            TREE arbol = new TREE(parser.raiz, name);
+                                            Interfaz.texto_consola+="Autómatas generados para la expresión: "+name+"\n";
+                                        }
                                     :};
 
 DEF::= DEF:a OPM    {:
                         RESULT = a;
                     :}
-    | OPM:n        {: 
+    | OPM:n         {: 
                         RESULT = n;
                     :};
 
 
-OPM::=  multiplicativo:m OPM:o      {:
-                                        NodoTree nodo = new NodoTree(parser.id, m, o, null);
-                                        parser.id++;
-                                        RESULT = nodo;
+OPM::=  multiplicativo:m OPM:o      {:  if (Interfaz.funcion == "GENERAR AUTOMATAS") {
+                                            //Expresiones.add(m);
+                                            NodoTree nodo = new NodoTree(parser.id, m, o, null);
+                                            parser.id++;
+                                            RESULT = nodo;
+                                        }
                                     :}
 
-       | operador:o OPM:a OPM:b     {:
-                                        NodoTree nodo = new NodoTree(parser.id, o, a, b);
-                                        parser.id++;
-                                        RESULT = nodo;
+        | operador:o OPM:a OPM:b    {:  if (Interfaz.funcion == "GENERAR AUTOMATAS") {
+                                            //Expresiones.add(o);
+                                            NodoTree nodo = new NodoTree(parser.id, o, a, b);
+                                            parser.id++;
+                                            RESULT = nodo;
+                                        }
                                     :}
-        | AUX:a                 {:
-                                    NodoTree nodo = new NodoTree(parser.id, a, null, null);
-                                    parser.id++; parser.aux++;
-                                    RESULT = nodo;
+        | lexema:b              {:  if (Interfaz.funcion == "GENERAR AUTOMATAS") {
+                                        //Expresiones.add(b);
+                                        NodoTree nodo = new NodoTree(parser.aux, b, null, null);
+                                        parser.aux++;
+                                        RESULT = nodo;
+                                    }
+                                :}
+        | conjuntoo:a           {:  if (Interfaz.funcion == "GENERAR AUTOMATAS") {
+                                        //Expresiones.add(a);
+                                        NodoTree nodo = new NodoTree(parser.aux, a, null, null);
+                                        parser.aux++;
+                                        RESULT = nodo;
+                                    }
+                                :}
+        | especial: c           {:  if (Interfaz.funcion == "GENERAR AUTOMATAS") {
+                                        //Expresiones.add(c);
+                                        NodoTree nodo = new NodoTree(parser.aux, c, null, null);
+                                        parser.aux++;
+                                        RESULT = nodo;
+                                    }
                                 :};
 
-AUX::= conjunto:a   {:
-                    if(a!=null){
-                        Expresiones.add(a);
-                        //NodoTree nodo = new NodoTree(parser.id, a, null, null);
-                        //parser.id++;
-                        RESULT = a;
-                    }
-                    :}
-        | lexema:b  {:
-                    if(b!=null){
-                        Expresiones.add(b);
-                        //NodoTree nodo = new NodoTree(parser.id, b, null, null);
-                        //parser.id++;
-                        RESULT = b;
-                    }
-                    :};
 
-
-EXPRESION::= EXPRESION id:a dospuntos lexema pcoma {:GUI.Interfaz.texto_consola+="Expresión reconocida: "+a+"\n";:}
-            | id:b dospuntos lexema pcoma {:GUI.Interfaz.texto_consola+="Expresión reconocida: "+b+"\n";:};
+EXPRESION::= EXPRESION id:a dospuntos lexema pcoma  {:  if (Interfaz.funcion == "ANALIZAR ENTRADAS") {
+                                                            Interfaz.texto_consola+="Expresión reconocida: "+a+"\n";
+                                                            
+                                                            
+                                                            Interfaz.texto_consola+="JSON de salida generado: "+a+"\n";
+                                                        }
+                                                    :}
+            | id:b dospuntos lexema pcoma   {:  if (Interfaz.funcion == "ANALIZAR ENTRADAS") {
+                                                    Interfaz.texto_consola+="Expresión reconocida: "+b+"\n";
+                                                    
+                                                    
+                                                    Interfaz.texto_consola+="JSON de salida generado: "+b+"\n";
+                                                }
+                                            :};
 

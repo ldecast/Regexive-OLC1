@@ -23,8 +23,8 @@ public class AFND { //leer de derecha a izquierda e ir agrupando por segmentos e
     public AFND(String nombre, Stack<String> stack) throws IOException {
         this.nombre = nombre;
         this.stack = stack;
-        //System.out.println("Nombre del AFN: " + this.nombre);
-        //System.out.println(this.stack.toString());
+        System.out.println("Nombre del AFN: " + this.nombre);
+        System.out.println(this.stack.toString());
         thompson();
     }
     

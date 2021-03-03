@@ -25,12 +25,17 @@ public class TREE {
     public static Stack<String> tmpValores = new Stack<>();
     public static Stack<Stack<Integer>> tmpTransiciones = new Stack<>();
     public static Stack<Stack<Integer>> tmpCerraduras = new Stack<>();
-    public int count = 0;
+    public int count;
+    public int c;
     public static int num;
     NodoTree raiz;
     String nombre;
 
     public TREE(NodoTree raiz, String nombre) throws IOException {
+        this.recurTemp = new Stack<>();
+        this.sigsTmp = new ArrayList<>();
+        this.count = 0;
+        this.c = 0;
         parser.id = 100;
         num = parser.aux;
         parser.aux  = 1;
@@ -39,9 +44,9 @@ public class TREE {
         next_table(this.raiz);
         transition_table();
         toDot("ARBOLES");
-//        toDot("SIGUIENTES");
-//        toDot("TRANSICIONES");
+        toDot("TRANSICIONES");
         generate_AFD();
+        toDot("SIGUIENTES");
     }
     
     private void next_table(NodoTree root) {
@@ -55,7 +60,7 @@ public class TREE {
                             Stack<Integer> tempNum = new Stack<>();
                             tempNum.add(num);
                             siguientes.add(new Siguiente(root.izq.ultimos.elementAt(i), tempNum));
-                            tempNum = null;
+                            tempNum.clear();
                         }
                         else
                             siguientes.add(new Siguiente(root.izq.ultimos.elementAt(i), root.der.primeros));
@@ -76,11 +81,11 @@ public class TREE {
         }
     }
     
-    private boolean checkNext(Stack<Integer> id, Stack<Integer> sigs){
+    private boolean checkNext(Stack<Integer> id, Stack<Integer> sigs) {
         boolean ban = false;
         for (int i = 0; i < id.size(); i++) {
             Siguiente tmp = searchSig(id.elementAt(i));
-            if (tmp!=null) {
+            if (tmp != null) {
                 for (int j = 0; j < sigs.size(); j++) {
                     tmp.siguientes.add(sigs.elementAt(j));
                 }
@@ -99,8 +104,8 @@ public class TREE {
         return null;
     }
     
-    public static ArrayList<Integer> sigsTmp = new ArrayList<Integer>();
-    int c = 0;
+    ArrayList<Integer> sigsTmp;
+    Stack<Stack<Integer>> recurTemp;
     private void transition_table() {
         Estado estadoInicial = new Estado(c, new Siguiente(num, raiz.primeros));
         estados.add(estadoInicial);
@@ -109,95 +114,67 @@ public class TREE {
 
         while (!sigsTmp.isEmpty()) {
             siguienteDe();
-//            System.out.println("enciclado");
         }
         
         recurTemp.clear();
     }
     
-    public static Stack<Stack<Integer>> recurTemp = new Stack<Stack<Integer>>();
-    private void siguienteDe(){
+    private void siguienteDe() {
         Siguiente aux;
+        int id;
         for (int i = 0; i < sigsTmp.size(); i++) {
-            int id = sigsTmp.remove(i); //el id al que le sacare los siguientes
+            id = sigsTmp.remove(i); //el id al que le sacare los siguientes
             aux = searchSig(id); //los siguientes de ese id
             try {
                 if (recurTemp.contains(aux.siguientes)) {
-                    System.out.println("CERRADURA NUEVA"+aux.identificador+aux.siguientes.toString());
-                    cerraduras.add(new Estado(c-1, aux));
-//                c++;
-            } else {
-                Estado e = new Estado(c, aux);
-                estados.add(e);
-                recurTemp.add(aux.siguientes);
+                    cerraduras.add(new Estado(c - 1, aux));
+                } else {
+                    Estado e = new Estado(c, aux);
+                    estados.add(e);
+                    recurTemp.add(aux.siguientes);
                     for (int j = 0; j < aux.siguientes.size(); j++) {
                         sigsTmp.add(aux.siguientes.elementAt(j));
                     }
-                c++;
-            }
+                    c++;
+                }
             } catch (Exception e) {
             }
-            
         }
     }
     
     private void generate_AFD() throws IOException{
         AFD automata = new AFD(nombre);
-        String estado, transicion, cerradura;
+        String estado, transicion;
         for (int i = 0; i < estados.size(); i++) {
             for (int j = 0; j < estados.elementAt(i).siguiente.siguientes.size(); j++) {
                 findValue(raiz, estados.elementAt(i).siguiente.siguientes.elementAt(j));
             }
-            estado = "S" + estados.elementAt(i).estadoActual;
-            transicion = tmpValores.remove(0);
-            automata.nodos.add(new NodoAFD(estado, transicion));
+            try {
+                estado = "S" + estados.elementAt(i).estadoActual;
+                transicion = tmpValores.pop();
+                automata.nodos.add(new NodoAFD(estado, transicion));
+            } catch (Exception e) {
+            }
         }
-//        for (int i = 0; i < tmpValores.size(); i++) {
-//            estado = "S" + i;
-//            transicion = tmpValores.elementAt(i);
-//            automata.nodos.add(new NodoAFD(estado, transicion));
-//        }
-//        System.out.println(tmpValores.toString()+"AUN HABIAN");
         tmpValores.clear();
-        
+
         for (int i = 0; i < cerraduras.size(); i++) {
-//            for (int j = 0; j < cerraduras.elementAt(i).siguiente.siguientes.size(); j++) {
-                findValue(raiz, cerraduras.elementAt(i).siguiente.identificador);
-//            }
-            estado = "S" + cerraduras.elementAt(i).estadoActual;
-            transicion = tmpValores.lastElement();
-            tmpValores.remove(transicion);
-            automata.cerraduras.add(estado+"->"+estado+"[label=<<font color=\"Crimson\">"+ transicion +"</font>> "
-                    + "fontname=\"Century Gothic\" fontsize=\"12\"];\n");
+            findValue(raiz, cerraduras.elementAt(i).siguiente.identificador);
+            try {
+                System.out.println(tmpValores.toString());
+                estado = "S" + cerraduras.elementAt(i).estadoActual;
+                transicion = tmpValores.pop();
+                automata.cerraduras.add(estado+"->"+estado+"[label=<<font color=\"Crimson\">"+ transicion +"</font>> "
+                        + "fontname=\"Century Gothic\" fontsize=\"12\"];\n");
+            } catch (Exception e) {
+            }
         }
-//        for (int i = 0; i < tmpValores.size(); i++) {
-//            estado = "S" + estados.elementAt(i).estadoActual;
-//            transicion = tmpValores.pop();
-//            automata.cerraduras.add(estado+"->"+estado+"[label=<<font color=\"Crimson\">"+ transicion +"</font>> "
-//                    + "fontname=\"Century Gothic\" fontsize=\"12\"];\n");
-//        }
-        System.out.println(tmpValores.toString()+"AUN HABIAN");
         tmpValores.clear();
-//        
-        
-//        for (int i = 0; i < cerraduras.size(); i++) {
-//            for (int j = 0; j < cerraduras.elementAt(i).estadosSiguientes.size(); j++) {
-//                findValue(raiz, cerraduras.elementAt(i).estadosSiguientes.elementAt(j));
-//            }
-//        }
-//        for (int i = 0; i < tmpValores.size(); i++) {
-//            estado = "S" + i;
-//            cerradura = tmpValores.elementAt(i);
-//            automata.nodos.add(new NodoAFD(estado, transicion));
-//        }
-//        for (int i = 0; i < cerraduras.size(); i++) {
-//            cerradura = findValue(raiz, cerraduras.elementAt(i).estadoActual);
-//            automata.cerraduras.add(cerradura);
-//        }
+
         automata.getDot();
     }
     
-    public static void findValue(NodoTree root, int id) {
+    public void findValue(NodoTree root, int id) {
         if (root.identificador == id) {
             tmpValores.add(root.valor);
         } else {
@@ -208,19 +185,6 @@ public class TREE {
                 findValue(root.der, id);
             }
         }
-    }
-    
-    private int findId(NodoTree root, String val){
-        if (root.valor == val) {
-            return root.identificador;
-        }
-        else{
-            if (root.izq != null)
-                findId(root.izq, val);
-            if (root.der != null)
-                findId(root.der, val);
-        }
-        return 0;
     }
     
     private void toDot(String tipo) throws IOException {
@@ -239,8 +203,8 @@ public class TREE {
                 break;
             case "TRANSICIONES":
                 contenido += dotTransition();
+                break;
         }
-        
         contenido += "\n}";
         
         File archivo = new File("src\\"+tipo+"_201902238\\"+nombre+"_"+GUI.Interfaz.fname+".dot");
@@ -275,7 +239,7 @@ public class TREE {
     }
     
     private String dotNextTable(){
-        String content = "tabla [ label =<\n" +
+        String content = "\"Tabla de Siguientes\"[ label =<\n" +
         "<TABLE BGCOLOR=\"#48D1CC\" WIDTH=\"170\" BORDER=\"3\" STYLE=\"ROUNDED\" COLOR=\"BLACK\" CELLBORDER=\"1\">\n" +
         "<TR>\n" +
         "<TD BORDER=\"0\" COLSPAN=\"2\" STYLE=\"ROUNDED\" HEIGHT=\"25\" WIDTH=\"0\"><B>Hoja</B></TD>\n" +
@@ -288,36 +252,39 @@ public class TREE {
             content += tmp.getNextTableDot(tmpValores.pop());
         }
         tmpValores.clear();
-        content += "</TABLE>>];";
+        content += "<TR>\n" +
+        "<TD BORDER=\"1\" COLSPAN=\"1\" WIDTH=\"25\" HEIGHT=\"10\">#</TD>\n" +
+        "<TD BORDER=\"1\" COLSPAN=\"1\"  WIDTH=\"25\" HEIGHT=\"10\">"+ num +"</TD>\n" +
+        "<TD BORDER=\"0\" COLSPAN=\"1\"  WIDTH=\"10\"></TD>\n" +
+        "<TD BORDER=\"1\" COLSPAN=\"1\" WIDTH=\"90\" HEIGHT=\"10\"> </TD>\n" +
+        "</TR>\n" +
+        "<TR>\n" +
+        "<TD BORDER=\"0\" COLSPAN=\"2\" STYLE=\"ROUNDED\" HEIGHT=\"5\"></TD>\n" +
+        "</TR>\n</TABLE>>];";
         return content;
     }
     
-    private String dotTransition(){
-        String content = "tabla [ label =<\n" +
-        "<TABLE BGCOLOR=\"#48D1CC\" WIDTH=\"170\" BORDER=\"3\" STYLE=\"ROUNDED\" COLOR=\"BLACK\" CELLBORDER=\"1\">\n" +
-        "<TR>\n" +
-        "<TD BORDER=\"0\" COLSPAN=\"1\" HEIGHT=\"25\" WIDTH=\"80\"><B>Estado</B></TD>\n" +
-        "<TD BORDER=\"0\" COLSPAN=\"20\" HEIGHT=\"25\" WIDTH=\"0\"><B>Transiciones</B></TD>\n" +
-        "</TR>\n";
-//        "<TR>\n" +
-//        "<TD BORDER=\"1\" COLSPAN=\"1\" HEIGHT=\"10\">S0</TD>\n";
-//        for (int i = 0; i < raiz.primeros.size(); i++) {
-//            findValue(raiz, raiz.primeros.elementAt(i));
-//            content += "<TD BORDER=\"1\" COLSPAN=\"1\" WIDTH=\"30\" HEIGHT=\"10\">{"+ raiz.primeros.elementAt(i) +"}: "+tmpValores.pop()+"</TD>\n";
-//        }
-//        content += "</TR>\n";
-//        tmpValores.clear();
+    private String dotTransition() {
+        String content = "\"Tabla de Transiciones\"[ label =<\n"
+        + "<TABLE BGCOLOR=\"#48D1CC\" WIDTH=\"170\" BORDER=\"3\" STYLE=\"ROUNDED\" COLOR=\"BLACK\" CELLBORDER=\"1\">\n"
+        + "<TR>\n"
+        + "<TD BORDER=\"0\" COLSPAN=\"1\" HEIGHT=\"25\" WIDTH=\"80\"><B>Estado</B></TD>\n"
+        + "<TD BORDER=\"0\" COLSPAN=\"20\" HEIGHT=\"25\" WIDTH=\"0\"><B>Transiciones</B></TD>\n"
+        + "</TR>\n";
         Estado tmp;
+        int aux = 0;
         for (int i = 0; i < estados.size(); i++) {
             tmp = estados.elementAt(i);
-            content += tmp.getTransitionDot(raiz, i);
-//            System.out.println("estado actual: S"+tmp.estadoActual+"estados siguientes: "+tmp.estadosSiguientes.toString());
+            content += tmp.getTransitionDot(raiz);
+            aux++;
+            if (aux < estados.size())
+                content += "</TR>\n";
         }
-        tmpValores.clear();
-        content += "<TR>\n" +
-        "<TD BORDER=\"0\" COLSPAN=\"2\" STYLE=\"ROUNDED\" HEIGHT=\"5\"></TD>\n" +
-        "</TR>\n" +
-        "</TABLE>>];";
+        content += "<TD BORDER=\"1\" COLSPAN=\"1\" WIDTH=\"30\" HEIGHT=\"10\">{" + num + "}: #</TD>\n</TR>\n";;
+        content += "<TR>\n"
+        + "<TD BORDER=\"0\" COLSPAN=\"2\" STYLE=\"ROUNDED\" HEIGHT=\"5\"></TD>\n"
+        + "</TR>\n"
+        + "</TABLE>>];";
         return content;
     }
     
@@ -327,32 +294,49 @@ class Estado {
 
     public int estadoActual;
     public Siguiente siguiente;
+    public static Stack<String> tmpTran = new Stack<>();
 
     public Estado(int estadoActual, Siguiente siguiente) {
         this.estadoActual = estadoActual;
         this.siguiente = siguiente;
     }
     
-    public String getTransitionDot(NodoTree root, int count) {//</TR> al final de todo el for
+    public String getTransitionDot(NodoTree root) {//</TR> al final de todo el for
         String content = "<TR>\n";
-        content += "<TD BORDER=\"1\" COLSPAN=\"1\" HEIGHT=\"10\">S" + count + "</TD>\n";
+        content += "<TD BORDER=\"1\" COLSPAN=\"1\" HEIGHT=\"10\">S" + estadoActual + "</TD>\n";
+        if (estadoActual == 0) {
+            findVal(root, 1);
+            content += "<TD BORDER=\"1\" COLSPAN=\"1\" WIDTH=\"30\" HEIGHT=\"10\">{1}: " + tmpTran.pop() + "</TD>\n";
+            tmpTran.clear();
+            return content;
+        }
         for (int i = 0; i < siguiente.siguientes.size(); i++) {
             if (siguiente.identificador == TREE.num) {
-                content += "<TD BORDER=\"1\" COLSPAN=\"1\" WIDTH=\"30\" HEIGHT=\"10\">{" + siguiente.identificador + "}: #</TD>\n";
+                //content += "<TD BORDER=\"1\" COLSPAN=\"1\" WIDTH=\"30\" HEIGHT=\"10\">{" + siguiente.identificador + "}: #</TD>\n";
             } else {
-                TREE.findValue(root, siguiente.identificador);
-                content += "<TD BORDER=\"1\" COLSPAN=\"1\" WIDTH=\"30\" HEIGHT=\"10\">{" + siguiente.identificador + "}: " + TREE.tmpValores.pop() + "</TD>\n";
+                try {
+                    findVal(root, siguiente.siguientes.elementAt(i));
+                    content += "<TD BORDER=\"1\" COLSPAN=\"1\" WIDTH=\"30\" HEIGHT=\"10\">{" + siguiente.siguientes.elementAt(i) + "}: " + tmpTran.pop() + "</TD>\n";
+                } catch (Exception e) {
+                }
             }
         }
-        content += "</TR>\n";
         return content;
     }
-
-}
-
-class Cerradura {
-    public int estadoActual;
     
+    public void findVal(NodoTree root, int id) {
+        if (root.identificador == id) {
+            tmpTran.add(root.valor);
+        } else {
+            if (root.izq != null) {
+                findVal(root.izq, id);
+            }
+            if (root.der != null) {
+                findVal(root.der, id);
+            }
+        }
+    }
+
 }
 
 class Siguiente {
@@ -367,7 +351,7 @@ class Siguiente {
     }
     
     public Stack<Integer> sortstack(Stack<Integer> input) {
-        Stack<Integer> tmpStack = new Stack<Integer>();
+        Stack<Integer> tmpStack = new Stack<>();
         while (!input.isEmpty()) {
             int tmp = input.pop();
             while (!tmpStack.isEmpty() && tmpStack.peek() > tmp) {
@@ -391,7 +375,6 @@ class Siguiente {
         "<TR>\n" +
         "<TD BORDER=\"0\" COLSPAN=\"2\" STYLE=\"ROUNDED\" HEIGHT=\"5\"></TD>\n" +
         "</TR>\n";
-        
         return content;
     }
     

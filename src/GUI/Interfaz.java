@@ -43,6 +43,7 @@ public class Interfaz extends javax.swing.JFrame {
     // falta metodo para cargar todo al abrir un archivo
     public static String texto_consola = "";
     public static String fname = "archivoPrueba";
+    public static String funcion = "FUNCION";
     public static Stack<String> expName = new Stack<>();
             
     /**
@@ -432,7 +433,7 @@ public class Interfaz extends javax.swing.JFrame {
 
     private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
         if (evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_A) {
-                JOptionPane.showMessageDialog(this, "ctrl + A");
+//                JOptionPane.showMessageDialog(this, "ctrl + A");
                 //Open method
             }
         else if (evt.isControlDown() && !evt.isShiftDown() && evt.getKeyCode() == KeyEvent.VK_S) {
@@ -464,6 +465,7 @@ public class Interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_BtnExitMouseClicked
 
     private void btnAutomatasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAutomatasActionPerformed
+        funcion = "GENERAR AUTOMATAS";
         texto_consola="";
         Modelos.Errores.lista_errores.clear();
         expName.clear();
@@ -474,7 +476,7 @@ public class Interfaz extends javax.swing.JFrame {
             sintactico = new Analizadores.parser(new Analizadores.Lexico(new StringReader(path)));
             sintactico.parse();
             Modelos.Errores.reportarErrores(fname);
-            txtSalida.setText(texto_consola);// + Modelos.Expresiones.stack.toString());
+            txtSalida.setText(texto_consola);
             addTreeNode();
 //        } catch (Exception e) {
 //            txtSalida.setText(e.toString());
@@ -482,7 +484,21 @@ public class Interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAutomatasActionPerformed
 
     private void btnAnalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizarActionPerformed
-        // TODO add your handling code here:
+        funcion = "ANALIZAR ENTRADAS";
+        texto_consola="";
+        Modelos.Errores.lista_errores.clear();
+        txtSalida.setText("");
+//        try {
+            String path = txtEntrada.getText();
+            Analizadores.parser sintactico;
+            sintactico = new Analizadores.parser(new Analizadores.Lexico(new StringReader(path)));
+            sintactico.parse();
+            Modelos.Errores.reportarErrores(fname);
+            txtSalida.setText(texto_consola);
+            addTreeNode(); //modificar ese metodo
+//        } catch (Exception e) {
+//            txtSalida.setText(e.toString());
+//        }
     }//GEN-LAST:event_btnAnalizarActionPerformed
 
     private void txtEntradaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEntradaKeyPressed

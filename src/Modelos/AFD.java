@@ -28,7 +28,7 @@ public class AFD {
     public String getNodes(){
         String node = "";
         for (int i = 0; i < nodos.size(); i++) {
-            System.out.println(i+"");
+//            System.out.println(i+"");
             node += nodos.elementAt(i).estado + "[label=\""+nodos.elementAt(i).estado+"\"];\n";
         }
         return node;
@@ -37,17 +37,17 @@ public class AFD {
     public String getTransition(){
         String transition = "";
         for (int i = 0; i < nodos.size()-1; i++) {
-            transition += nodos.elementAt(i).estado + "->" + nodos.elementAt(i+1).estado
+                transition += nodos.elementAt(i).estado + "->" + nodos.elementAt(i+1).estado
                     + "[label=<<font color=\"Crimson\">"+ nodos.elementAt(i).labelTransicion +"</font>> "
                     + "fontname=\"Century Gothic\" fontsize=\"12\"];\n";
-        }
+            }
         return transition;
     }
     
     public String getCerradura(){
         Stack<String> aux = new Stack<>();
         String cerradura = "";
-        System.out.println(cerraduras.toString()+"MMMM");
+//        System.out.println(cerraduras.toString()+"MMMM");
         for (int i = 0; i < cerraduras.size(); i++) {
             if (!aux.contains(cerraduras.elementAt(i))) {
                 cerradura += cerraduras.elementAt(i);
@@ -103,7 +103,7 @@ public class AFD {
 }
 
 class NodoAFD{
-    String estado, labelTransicion, labelCerradura;
+    String estado, labelTransicion;
 
     public NodoAFD(String estado, String labelTransicion) {
         this.estado = estado;
