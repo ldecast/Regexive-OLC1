@@ -8,6 +8,7 @@ package Modelos;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Stack;
 
 /**
@@ -36,18 +37,21 @@ public class AFD {
     
     public String getTransition(){
         String transition = "";
-        for (int i = 0; i < nodos.size()-1; i++) {
-                transition += nodos.elementAt(i).estado + "->" + nodos.elementAt(i+1).estado
-                    + "[label=<<font color=\"Crimson\">"+ nodos.elementAt(i).labelTransicion +"</font>> "
-                    + "fontname=\"Century Gothic\" fontsize=\"12\"];\n";
+        for (int i = 0; i < nodos.size() - 1; i++) {
+            for (int j = 0; j < nodos.elementAt(i).transiciones.size(); j++) {
+                System.out.println(nodos.elementAt(i).estado);
+                transition += nodos.elementAt(i).estado + "->" + nodos.elementAt(i + 1).estado;
+                transition += "[label=<<font color=\"Crimson\">" + nodos.elementAt(i).transiciones.get(j) + "</font>> "
+                        + "fontname=\"Century Gothic\" fontsize=\"12\"];\n";
             }
+        }
         return transition;
     }
     
     public String getCerradura(){
         Stack<String> aux = new Stack<>();
         String cerradura = "";
-//        System.out.println(cerraduras.toString()+"MMMM");
+        System.out.println(cerraduras.toString()+"MMMM");
         for (int i = 0; i < cerraduras.size(); i++) {
             if (!aux.contains(cerraduras.elementAt(i))) {
                 cerradura += cerraduras.elementAt(i);
@@ -127,10 +131,11 @@ public class AFD {
 }
 
 class NodoAFD{
-    String estado, labelTransicion;
+    String estado;//, labelTransicion;
+    ArrayList<String> transiciones;
 
-    public NodoAFD(String estado, String labelTransicion) {
+    public NodoAFD(String estado, ArrayList<String> transiciones) {
         this.estado = estado;
-        this.labelTransicion = labelTransicion;
+        this.transiciones = transiciones;
     }
 }

@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.Stack;
 import Analizadores.parser;
 import java.util.ArrayList;
+import static java.util.Collections.sort;
 import java.util.HashSet;
 import java.util.Set;
 /**
@@ -144,29 +145,26 @@ public class TREE {
     
     private void generate_AFD() throws IOException{
         AFD automata = new AFD(nombre);
-        String estado, transicion;
+        String estado;
+//        ArrayList<String> transiciones = new ArrayList<>();
         for (int i = 0; i < estados.size(); i++) {
             for (int j = 0; j < estados.elementAt(i).siguiente.siguientes.size(); j++) {
                 findValue(raiz, estados.elementAt(i).siguiente.siguientes.elementAt(j));
             }
-            try {
-                estado = "S" + estados.elementAt(i).estadoActual;
-                transicion = tmpValores.pop();
-                automata.nodos.add(new NodoAFD(estado, transicion));
-            } catch (Exception e) {
-            }
+            estado = "S" + estados.elementAt(i).estadoActual;
+            automata.nodos.add(new NodoAFD(estado, new ArrayList(tmpValores)));
+            tmpValores.clear();
         }
         tmpValores.clear();
-
         for (int i = 0; i < cerraduras.size(); i++) {
-            findValue(raiz, cerraduras.elementAt(i).siguiente.identificador);
-            try {
-                System.out.println(tmpValores.toString());
-                estado = "S" + cerraduras.elementAt(i).estadoActual;
-                transicion = tmpValores.pop();
-                automata.cerraduras.add(estado+"->"+estado+"[label=<<font color=\"Crimson\">"+ transicion +"</font>> "
-                        + "fontname=\"Century Gothic\" fontsize=\"12\"];\n");
-            } catch (Exception e) {
+            estado = "S" + cerraduras.elementAt(i).estadoActual;
+            for (int j = 0; j < cerraduras.elementAt(i).siguiente.siguientes.size(); j++) {
+                
+                findValue(raiz, cerraduras.elementAt(i).siguiente.siguientes.elementAt(j));
+                try{
+                automata.cerraduras.add(estado + "->" + estado + "[label=<<font color=\"Crimson\">" + tmpValores.pop() + "</font>> "
+                        + "fontname=\"Century Gothic\" fontsize=\"12\"];\n");}
+                catch(Exception e ){}
             }
         }
         tmpValores.clear();
@@ -373,6 +371,7 @@ class Siguiente {
         this.identificador = identificador;
         Set<Integer> set = new HashSet<>(siguiente);//sort?
         this.siguientes.addAll(set);
+        sort(this.siguientes);
     }
     
     public Stack<Integer> sortstack(Stack<Integer> input) {

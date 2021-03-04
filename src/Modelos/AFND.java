@@ -110,6 +110,7 @@ public class AFND { //leer de derecha a izquierda e ir agrupando por segmentos e
                         aux.add(count);
                         states.add(count);
                         states.add(count+2);
+                        aux.add(count+2);
                         count += 3;
                     }
                     else{
@@ -117,9 +118,10 @@ public class AFND { //leer de derecha a izquierda e ir agrupando por segmentos e
                         op1 = trans.pop();
                         temp += String.valueOf(count)+"[label=\"\"];\n";
                         temp += String.valueOf(sti)+"->"+String.valueOf(count)+"[label=<<font color=\"Crimson\">"+ op1 +"</font>> fontname=\"Century Gothic\" fontsize=\"12\"];\n";
-                        aux.add(count);
+                        aux.add(sti); //...
                         states.add(sti);
                         states.add(count);
+                        aux.add(count);
                         count ++;
                     }
                 }
@@ -139,6 +141,8 @@ public class AFND { //leer de derecha a izquierda e ir agrupando por segmentos e
                             temp += String.valueOf(sti)+"->"+String.valueOf(stf)+"->"+String.valueOf(sti)+"[label=<<font color=\"Crimson\">ε</font>> fontname=\"Century Gothic\" fontsize=\"12\"];\n";
                             break;
                     }
+                    states.add(sti);
+                    states.add(count);
                 }
                 else if (states.isEmpty()){
                     sti = 0;
@@ -200,7 +204,7 @@ public class AFND { //leer de derecha a izquierda e ir agrupando por segmentos e
     
     private void toDot(String complemento) throws IOException{
         String contenido = "";
-        contenido += "digraph D {\n"
+        contenido += "digraph AFND {\n"
         + "    graph[bgcolor=\"#141D26\"]\n"
         + "    rankdir=\"RL\";\n"
         + "    node[shape=\"circle\" style=filled fontname=\"Century Gothic\" fontsize=\"14\" color=\"#48D1CC\"];\n"
