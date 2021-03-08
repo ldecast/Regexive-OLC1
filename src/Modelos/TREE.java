@@ -166,6 +166,7 @@ public class TREE {
                         + "fontname=\"Century Gothic\" fontsize=\"12\"];\n");}
                 catch(Exception e ){}
             }
+            tmpValores.clear();
         }
         tmpValores.clear();
         automata.getDot();
@@ -210,6 +211,7 @@ public class TREE {
         File archivo = new File("src\\REPORTES\\"+tipo+"_201902238\\"+nombre+"_"+GUI.Interfaz.fname+".dot");
         try (FileWriter escritor = new FileWriter(archivo)) {
             escritor.write(contenido);
+            escritor.close();
         }
         generateSVG(tipo);
         generatePNG(tipo);
@@ -369,7 +371,7 @@ class Siguiente {
 
     public Siguiente(int identificador, Stack<Integer> siguiente) {
         this.identificador = identificador;
-        Set<Integer> set = new HashSet<>(siguiente);//sort?
+        Set<Integer> set = new HashSet<>(siguiente);
         this.siguientes.addAll(set);
         sort(this.siguientes);
     }

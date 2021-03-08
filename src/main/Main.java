@@ -4,17 +4,19 @@
  * and open the template in the editor.
  */
 package main;
+
 import javax.swing.UIManager;
 import GUI.Interfaz;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UnsupportedLookAndFeelException;
+
 /**
  *
  * @author luisd
  */
 public class Main {
-    
+
     /**
      * @param args the command line arguments
      */
@@ -28,14 +30,13 @@ public class Main {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    private static void generarCompilador() 
-    {
+
+    private static void generarCompilador() {
         try {
             String ruta = "src/Analizadores/";
             String opcFlex[] = {ruta + "Lexico.jflex", "-d", ruta};
             jflex.Main.generate(opcFlex);
-            
+
             String opcCUP[] = {"-destdir", ruta, "-parser", "parser", ruta + "Sintactico.cup"};
             java_cup.Main.main(opcCUP);
         } catch (Exception e) {

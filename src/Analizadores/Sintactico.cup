@@ -8,6 +8,7 @@ parser code
     public static int id = 100;
     public static int aux = 1;
     public static NodoTree raiz;
+    public static Validador val = new Validador();
     //-----------------------------------------para errores sintacticos-------------------------------------------------------------------------------------------
     public void syntax_error(Symbol s)
     {
@@ -27,30 +28,34 @@ parser code
 action code {:
 :}
 
-terminal String prconj, pcoma, dospuntos, labre, lcierra, porcentajes, id, lexema, notacionL, notacionD, notacionA, deriva, operador, multiplicativo, conjuntoo, especial;
+terminal String prconj, pcoma, dospuntos, labre, lcierra, porcentajes, id, lexema, notacionL, notacionD, notacionA, deriva, operador, multiplicativo, conjuntoo, especial, cadena;
 
 non terminal String INICIO, EXP, SENTENCIA, EXPRESION, NOTACION, CONJUNTO, INFIJA;
 non terminal NodoTree DEF, OPM;
+non terminal String CADENAS;
 
 start with INICIO;
 
 INICIO::= EXP {::};
 
-EXP::= labre SENTENCIA porcentajes EXPRESION:e lcierra {::};
+EXP::= labre SENTENCIA porcentajes EXPRESION:e lcierra  {:  if (Interfaz.funcion == "ANALIZAR ENTRADAS")
+                                                                parser.val.toJSON();
+                                                        :};
 
 SENTENCIA::= SENTENCIA CONJUNTO pcoma {::}
-            | SENTENCIA INFIJA pcoma    {:
-                                        :}
-            | CONJUNTO pcoma            {:
-                                        :}
-            | INFIJA:r pcoma            {: 
-                                        :};
+            | SENTENCIA INFIJA:r pcoma {::}
+            | CONJUNTO pcoma {::}
+            | INFIJA:r pcoma {::};
 
-CONJUNTO ::= prconj dospuntos id deriva NOTACION {::};
+CONJUNTO ::= prconj dospuntos id:nombre deriva NOTACION:n   {:  if (Interfaz.funcion == "ANALIZAR ENTRADAS") {
+                                                                    Conjunto conj = new Conjunto(nombre, n);
+                                                                    Expresiones.addConj(conj);
+                                                                }
+                                                            :};
 
-NOTACION ::= notacionL {::}
-            | notacionA {::}
-            | notacionD {::};
+NOTACION ::= notacionL:l {: RESULT = "let"+l; :}
+            | notacionA:a {: RESULT = "asc"+a; :}
+            | notacionD:d {: RESULT = "dig"+d; :};
 
 INFIJA ::= id:name deriva DEF:s     {:  if (Interfaz.funcion == "GENERAR AUTOMATAS") {
                                             NodoTree nodoNum = new NodoTree(parser.id, "#", null, null);
@@ -111,18 +116,18 @@ OPM::=  multiplicativo:m OPM:o      {:  if (Interfaz.funcion == "GENERAR AUTOMAT
                                 :};
 
 
-EXPRESION::= EXPRESION id:a dospuntos lexema pcoma  {:  if (Interfaz.funcion == "ANALIZAR ENTRADAS") {
+EXPRESION::= EXPRESION id:nom dospuntos lexema:a pcoma  {:  if (Interfaz.funcion == "ANALIZAR ENTRADAS") {
                                                             Interfaz.texto_consola+="Expresión reconocida: "+a+"\n";
-                                                            
-                                                            
-                                                            Interfaz.texto_consola+="JSON de salida generado: "+a+"\n";
-                                                        }
-                                                    :}
-            | id:b dospuntos lexema pcoma   {:  if (Interfaz.funcion == "ANALIZAR ENTRADAS") {
+                                                            //Expresiones.add(a);
+                                                            parser.val.addCadena(nom, a);
+                                                            Interfaz.texto_consola+="JSON de salida generado\n\n";
+                                                            }
+                                                        :}
+            | id:nom dospuntos lexema:b pcoma   {:  if (Interfaz.funcion == "ANALIZAR ENTRADAS") {
                                                     Interfaz.texto_consola+="Expresión reconocida: "+b+"\n";
-                                                    
-                                                    
-                                                    Interfaz.texto_consola+="JSON de salida generado: "+b+"\n";
-                                                }
-                                            :};
+                                                    //Expresiones.add(b);
+                                                    parser.val.addCadena(nom, b);
+                                                    Interfaz.texto_consola+="JSON de salida generado\n\n";
+                                                    }
+                                                :};
 

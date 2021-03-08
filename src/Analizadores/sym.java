@@ -8,6 +8,7 @@ package Analizadores;
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
+  public static final int cadena = 18;
   public static final int especial = 17;
   public static final int conjuntoo = 16;
   public static final int porcentajes = 7;
@@ -44,7 +45,8 @@ public class sym {
   "operador",
   "multiplicativo",
   "conjuntoo",
-  "especial"
+  "especial",
+  "cadena"
   };
 }
 

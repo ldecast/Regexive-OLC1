@@ -51,14 +51,14 @@ import main.Main;
  * @author luisd
  */
 public class Interfaz extends javax.swing.JFrame {
-    // falta metodo para cargar todo al abrir un archivo
+
     public static String texto_consola = "";
     public static String fname = "NewFile";
     public static String path = "NewFile";
     public static String funcion = "";
     public static boolean generated = false;
     public static Stack<String> expName = new Stack<>();
-            
+
     /**
      * Creates new form NewJFrame
      */
@@ -97,6 +97,7 @@ public class Interfaz extends javax.swing.JFrame {
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem10 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
         VentanaMenu = new javax.swing.JMenu();
         jMenuItem7 = new javax.swing.JMenuItem();
@@ -348,13 +349,23 @@ public class Interfaz extends javax.swing.JFrame {
 
         jMenuItem4.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         jMenuItem4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/icons/app-json-icon.png"))); // NOI18N
-        jMenuItem4.setText("  Abrir directorio JSON");
+        jMenuItem4.setText("  Abrir directorio JSON               Ctrl+J");
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem4ActionPerformed(evt);
             }
         });
         FileMenu.add(jMenuItem4);
+
+        jMenuItem10.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        jMenuItem10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/icons/html-icon.png"))); // NOI18N
+        jMenuItem10.setText("  Registros de errores                Ctrl+R");
+        jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem10ActionPerformed(evt);
+            }
+        });
+        FileMenu.add(jMenuItem10);
 
         jMenuItem5.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         jMenuItem5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/icons/close-icon.png"))); // NOI18N
@@ -384,7 +395,7 @@ public class Interfaz extends javax.swing.JFrame {
 
         jMenuItem8.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         jMenuItem8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/icons/Close-2-icon.png"))); // NOI18N
-        jMenuItem8.setText("  Cerrar ventana                      Alt+W");
+        jMenuItem8.setText("  Cerrar ventana                     Ctrl+W");
         jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem8ActionPerformed(evt);
@@ -443,8 +454,9 @@ public class Interfaz extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         //Open file
-        if (!"NewFile".equals(fname)) {
+        if (!"NewFile".equals(fname) || txtEntrada.getText().length() > 0) {
             if (JOptionPane.showConfirmDialog(this, "Perderá todos los datos que no haya guardado", " ¿Está seguro?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                closeFile();
                 openFile();
             }
         } else {
@@ -456,8 +468,7 @@ public class Interfaz extends javax.swing.JFrame {
         //Update file
         if ("NewFile".equals(fname)) {
             saveAs();
-        }
-        else{
+        } else {
             File file = new File(path);
             try (FileWriter escritor = new FileWriter(file)) {
                 escritor.write(txtEntrada.getText());
@@ -474,8 +485,9 @@ public class Interfaz extends javax.swing.JFrame {
     private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
         if (evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_A) {
             //Open method
-            if (!"NewFile".equals(fname)) {
+            if (!"NewFile".equals(fname) || txtEntrada.getText().length() > 0) {
                 if (JOptionPane.showConfirmDialog(this, "Perderá todos los datos que no haya guardado", " ¿Está seguro?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    closeFile();
                     openFile();
                 }
             } else {
@@ -493,6 +505,10 @@ public class Interfaz extends javax.swing.JFrame {
                     Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+        } else if (evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_J) {
+            openDirectory();
+        } else if (evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_R) {
+            openErrors();
         } else if (evt.isControlDown() && evt.isShiftDown() && evt.getKeyCode() == KeyEvent.VK_S) {
             saveAs();
         } else if (evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_N) {
@@ -503,8 +519,8 @@ public class Interfaz extends javax.swing.JFrame {
             } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else if (evt.isAltDown() && evt.getKeyCode() == KeyEvent.VK_W) {
-            if (!"NewFile".equals(fname)) {
+        } else if (evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_W) {
+            if (!"NewFile".equals(fname) || txtEntrada.getText().length() > 0) {
                 if (JOptionPane.showConfirmDialog(this, "Perderá todos los datos que no haya guardado", " ¿Está seguro?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     this.dispose();
                 }
@@ -516,13 +532,7 @@ public class Interfaz extends javax.swing.JFrame {
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
         // Abrir directorio
-        try {
-            Desktop desktop = Desktop.getDesktop();
-            File dirToOpen = new File("C:\\Users\\luisd\\Documents\\NetBeansProjects\\REGEXIVE\\src\\REPORTES\\SALIDAS_201902238");
-            desktop.open(dirToOpen);
-        } catch (IOException ex) {
-            Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        openDirectory();
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void BtnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnExitActionPerformed
@@ -530,8 +540,8 @@ public class Interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_BtnExitActionPerformed
 
     private void BtnExitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BtnExitMouseClicked
-        if (JOptionPane.showConfirmDialog(this,"¿Seguro que quieres salir de todas las ventanas?","   Salir",
-            JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION)
+        if (JOptionPane.showConfirmDialog(this, "¿Seguro que quieres salir de todas las ventanas?", "   Salir",
+                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
             System.exit(0);
     }//GEN-LAST:event_BtnExitMouseClicked
 
@@ -558,13 +568,13 @@ public class Interfaz extends javax.swing.JFrame {
             generated = true;
         }
     }//GEN-LAST:event_btnAutomatasActionPerformed
-    
+
     private void btnAnalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizarActionPerformed
         if (generated) {
             funcion = "ANALIZAR ENTRADAS";
-        texto_consola="";
-        Modelos.Errores.lista_errores.clear();
-        txtSalida.setText("");
+            texto_consola = "";
+            Modelos.Errores.lista_errores.clear();
+            txtSalida.setText("");
 //        try {
             String path = txtEntrada.getText();
             Analizadores.parser sintactico;
@@ -578,7 +588,7 @@ public class Interfaz extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(this, "No se encuentran autómatas generados\n", " Intente de nuevo", JOptionPane.WARNING_MESSAGE);
         }
-        
+
     }//GEN-LAST:event_btnAnalizarActionPerformed
 
     private void txtEntradaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEntradaKeyPressed
@@ -607,7 +617,7 @@ public class Interfaz extends javax.swing.JFrame {
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
         //Close file
-        if (!"NewFile".equals(fname)) {
+        if (!"NewFile".equals(fname) || txtEntrada.getText().length() > 0) {
             if (JOptionPane.showConfirmDialog(this, "Perderá todos los datos que no haya guardado", " ¿Está seguro?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                 closeFile();
             }
@@ -654,7 +664,6 @@ public class Interfaz extends javax.swing.JFrame {
                         break;
                     case "Autómatas":
                         if (evt.getClickCount() == 1) {
-                            System.out.println("src/GUI/IMAGENES/AFND/" + node.toString() + ".png");
                             if (node.toString().startsWith("AFND")) {
                                 BufferedImage image = ImageIO.read(new File("src/GUI/IMAGENES/AFND/" + node.toString().substring(4) + ".png"));
                                 jLabel3.setIcon(new ImageIcon(image));
@@ -698,42 +707,46 @@ public class Interfaz extends javax.swing.JFrame {
         saveAs();
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
-    private void addTreeNode(){
-        DefaultTreeModel model = (DefaultTreeModel)jTree.getModel();
-        DefaultMutableTreeNode root = (DefaultMutableTreeNode)model.getRoot();
-        DefaultMutableTreeNode arboles = (DefaultMutableTreeNode)model.getChild(root, 0);
-        DefaultMutableTreeNode siguientes = (DefaultMutableTreeNode)model.getChild(root, 1);
-        DefaultMutableTreeNode transiciones = (DefaultMutableTreeNode)model.getChild(root, 2);
-        DefaultMutableTreeNode automatas = (DefaultMutableTreeNode)model.getChild(root, 3);
+    private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
+        openErrors();
+    }//GEN-LAST:event_jMenuItem10ActionPerformed
+
+    private void addTreeNode() {
+        DefaultTreeModel model = (DefaultTreeModel) jTree.getModel();
+        DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+        DefaultMutableTreeNode arboles = (DefaultMutableTreeNode) model.getChild(root, 0);
+        DefaultMutableTreeNode siguientes = (DefaultMutableTreeNode) model.getChild(root, 1);
+        DefaultMutableTreeNode transiciones = (DefaultMutableTreeNode) model.getChild(root, 2);
+        DefaultMutableTreeNode automatas = (DefaultMutableTreeNode) model.getChild(root, 3);
         for (int i = 0; i < expName.size(); i++) {
             String x = expName.elementAt(i);
             switch (x.charAt(0)) {
                 case '0':
-                    arboles.add(new DefaultMutableTreeNode(x.substring(1)+"_"+fname));
+                    arboles.add(new DefaultMutableTreeNode(x.substring(1) + "_" + fname));
                     break;
                 case '1':
-                    siguientes.add(new DefaultMutableTreeNode(x.substring(1)+"_"+fname));
+                    siguientes.add(new DefaultMutableTreeNode(x.substring(1) + "_" + fname));
                     break;
                 case '2':
-                    transiciones.add(new DefaultMutableTreeNode(x.substring(1)+"_"+fname));
+                    transiciones.add(new DefaultMutableTreeNode(x.substring(1) + "_" + fname));
                     break;
                 case '3':
-                    automatas.add(new DefaultMutableTreeNode("AFND"+x.substring(1)+"_"+fname));
+                    automatas.add(new DefaultMutableTreeNode("AFND" + x.substring(1) + "_" + fname));
                     break;
                 case '4':
-                    automatas.add(new DefaultMutableTreeNode("AFD"+x.substring(1)+"_"+fname));
+                    automatas.add(new DefaultMutableTreeNode("AFD" + x.substring(1) + "_" + fname));
                     break;
             }
         }
         model.reload(root);
     }
-    
-    public static void addToTree(String item, int type){
-        
+
+    public static void addToTree(String item, int type) {
+
         GUI.Interfaz.expName.add(String.valueOf(type) + item);
     }
-    
-    public void closeFile(){
+
+    public void closeFile() {
         txtEntrada.setText("");
         txtSalida.setText("");
         jLabel3.setIcon(null);
@@ -749,8 +762,8 @@ public class Interfaz extends javax.swing.JFrame {
         jTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
         fname = "NewFile";
     }
-    
-    public void openFile(){
+
+    public void openFile() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileFilter(new FileNameExtensionFilter("olc file", "olc"));
         fileChooser.setDialogTitle("Abrir archivo");
@@ -770,8 +783,8 @@ public class Interfaz extends javax.swing.JFrame {
             }
         }
     }
-    
-    public void saveAs(){
+
+    public void saveAs() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileFilter(new FileNameExtensionFilter("olc file", "olc"));
         fileChooser.setDialogTitle("Guardar como...");
@@ -791,7 +804,27 @@ public class Interfaz extends javax.swing.JFrame {
             }
         }
     }
-    
+
+    public void openDirectory() {
+        try {
+            Desktop desktop = Desktop.getDesktop();
+            File dirToOpen = new File("C:\\Users\\luisd\\Documents\\NetBeansProjects\\REGEXIVE\\src\\REPORTES\\SALIDAS_201902238");
+            desktop.open(dirToOpen);
+        } catch (IOException ex) {
+            Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void openErrors() {
+        try {
+            Desktop desktop = Desktop.getDesktop();
+            File dirToOpen = new File("C:\\Users\\luisd\\Documents\\NetBeansProjects\\REGEXIVE\\src\\REPORTES\\ERRORES_201902238");
+            desktop.open(dirToOpen);
+        } catch (IOException ex) {
+            Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu AboutMenu;
     private javax.swing.JMenuBar BarraMenu;
@@ -805,6 +838,7 @@ public class Interfaz extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;

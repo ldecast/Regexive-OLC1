@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Stack;
-import GUI.Interfaz;
 
 /**
  *
@@ -19,10 +18,12 @@ public class AFND { //leer de derecha a izquierda e ir agrupando por segmentos e
     
     private final String nombre;
     private Stack<String> stack = new Stack<>();
+    public static Stack<String> tmp;
 
-    public AFND(String nombre, Stack<String> stack) throws IOException {
+    public AFND(String nombre, Stack<String> stack, Stack<String> tmp) throws IOException {
         this.nombre = nombre;
         this.stack = stack;
+        this.tmp = tmp;
         System.out.println("Nombre del AFN: " + this.nombre);
         System.out.println(this.stack.toString());
         thompson();
@@ -215,6 +216,7 @@ public class AFND { //leer de derecha a izquierda e ir agrupando por segmentos e
         File archivo = new File("src\\REPORTES\\AFND_201902238\\"+nombre+"_"+GUI.Interfaz.fname+".dot");
         try (FileWriter escritor = new FileWriter(archivo)) {
             escritor.write(contenido);
+            escritor.close();
         }
         GUI.Interfaz.addToTree(nombre,3);
         generateSVG();

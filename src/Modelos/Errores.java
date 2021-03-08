@@ -29,7 +29,7 @@ public class Errores {
         this.tipo = tipo;
     }
 
-    public static void reportarErrores(String filename) throws IOException, URISyntaxException{ //hacerlo estatico y ejecutarlo desde el boton
+    public static void reportarErrores(String filename) throws IOException, URISyntaxException{
         if (!lista_errores.isEmpty()) {
             String errores = "";
             for (int i = 0; i < lista_errores.size(); i++) {

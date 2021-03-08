@@ -1,6 +1,5 @@
 package Analizadores;
 import java_cup.runtime.*;
-import GUI.Interfaz;
 import Modelos.*;
 %%
 
@@ -28,7 +27,7 @@ import Modelos.*;
 LineTerminator = \r|\n|\r\n
 InputCharacter = [^\r\n]
 WhiteSpace     = {LineTerminator} | [ \t\f]
-Alternativo = [ \t\r\n]
+Alternativo = [ \t\r\f\n]
 B = {WhiteSpace}+ | {Alternativo}+
 
 Comment = {TraditionalComment}
@@ -37,26 +36,27 @@ Comment = {TraditionalComment}
 TraditionalComment   = "<!" [^*] ~"!>" | "<!" "!"+ ">"
 EndOfLineComment     = "//" {InputCharacter}* {LineTerminator}?
 
-prcon = "CONJ"
-guion = "-"
-pico = ">"
-virgulilla = "~"
-coma = ","
+prcon = {B}*"CONJ"{B}*
+guion = {B}*"-"{B}*
+pico = {B}*">"{B}*
+virgulilla = {B}*"~"{B}*
+coma = {B}*","{B}*
 porcentaje = {B}*"%"{B}*
-labre = "{"
-lcierra = "}"
+labre = {B}*"{"{B}*
+lcierra = {B}*"}"{B}*
 
-deriva = {guion}{B}*{pico}
+deriva = {guion}{pico}
 operador = "." | "|"
 multiplicativo = "*" | "+" | "?"
-especiales = "\\n" | "\\’" | "\\”" | "\\'"
+especiales = "\\n" | "\\\’" | "\\\”" | "\\\'" | "\\\""
 
 letra = [a-zA-Z]
 digito = [0-9]
 
 identificador = [:jletter:] [:jletterdigit:]*
 
-lexema = \"[^\"]*\" | \“[^\”]*\”
+//lexema = \"[^\"]*\" | \“[^\”]*\”
+lexema = [\"]([^\"\n]|(\\\"))*[\"]
 
 notacionL = {letra}{virgulilla}{letra} | ({letra}{coma})*{letra}
 notacionD = {digito}{virgulilla}{digito} | ({digito}{coma})*{digito}
@@ -118,7 +118,7 @@ conjuntoo = {labre}{identificador}{lcierra}
 
 {especiales} {
     Expresiones.add(yytext());
-    System.out.println("ESPECIAL: "+yytext());
+    //System.out.println("ESPECIAL: "+yytext());
     return new Symbol(sym.especial,yycolumn,yyline,yytext());
 }
 
