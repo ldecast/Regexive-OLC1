@@ -57,7 +57,7 @@ public class Validador {
         for (int i = 0; i < cadenas.size(); i++) {
             content += "    {\n"
                     + "\t\"Valor\": " + cadenas.get(i).valor + ",\n"
-                    + "\t\"Expresión regular\": \"" + cadenas.get(i).id + ",\"\n"
+                    + "\t\"Expresión regular\": \"" + cadenas.get(i).id + "\",\n"
                     + "\t\"Resultado\": \"Cadena ";
             if (isValidate()) {
                 content += "válida";

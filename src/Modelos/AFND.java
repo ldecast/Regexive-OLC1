@@ -60,8 +60,7 @@ public class AFND { //leer de derecha a izquierda e ir agrupando por segmentos e
     }
 
     private void thompson() throws IOException {
-        //System.out.println("Nombre del AFN: " + this.nombre);
-        //System.out.println(pila.toString());
+
         boolean m = false;
         String temp = "0[label=\"\" shape=\"doublecircle\" fontsize=\"12\"];\n";
         temp += "final[label=\"S0\" fontsize=\"12\"];\n";
@@ -124,7 +123,7 @@ public class AFND { //leer de derecha a izquierda e ir agrupando por segmentos e
                         aux.add(count + 2);
                         count += 3;
                     } else {
-                        sti = aux.remove(0);
+                        sti = aux.pop();
                         op1 = trans.pop();
                         temp += String.valueOf(count) + "[label=\"\"];\n";
                         temp += String.valueOf(sti) + "->" + String.valueOf(count) + "[label=<<font color=\"Crimson\">" + op1 + "</font>> fontname=\"Century Gothic\" fontsize=\"12\"];\n";
@@ -138,7 +137,7 @@ public class AFND { //leer de derecha a izquierda e ir agrupando por segmentos e
             } else if (isMultiplicative(c)) {
                 if (states.size() >= 2) {
                     sti = states.remove(0);
-                    stf = states.pop();//.remove(0);
+                    stf = states.remove(0); //(mejor estetico, pero fallo en 1)
                     switch (c.trim()) {
                         case "?":
                             temp += String.valueOf(sti) + "->" + String.valueOf(stf) + "[label=<<font color=\"Crimson\">ε</font>> fontname=\"Century Gothic\" fontsize=\"12\"];\n";
@@ -151,9 +150,7 @@ public class AFND { //leer de derecha a izquierda e ir agrupando por segmentos e
                             break;
                     }
                     states.add(sti);
-                    states.add(stf);
-                    aux.add(sti);
-                    aux.add(stf);
+                    states.add(count);
                 } else if (states.isEmpty()) {
                     sti = 0;
                     op1 = trans.pop();
@@ -208,6 +205,7 @@ public class AFND { //leer de derecha a izquierda e ir agrupando por segmentos e
             temp += "0->1[label=<<font color=\"Crimson\">ε</font>> fontname=\"Century Gothic\" fontsize=\"12\"];\n";
         }
         temp += String.valueOf(count - 1) + "->final[label=<<font color=\"Crimson\">ε</font>> fontname=\"Century Gothic\" fontsize=\"12\"];";
+        stack.clear();
         pila.clear();
         toDot(temp);
     }
