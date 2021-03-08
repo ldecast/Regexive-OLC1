@@ -554,17 +554,17 @@ public class Interfaz extends javax.swing.JFrame {
             Modelos.Errores.lista_errores.clear();
             expName.clear();
             txtSalida.setText("");
-//        try {
-            String path = txtEntrada.getText();
-            Analizadores.parser sintactico;
-            sintactico = new Analizadores.parser(new Analizadores.Lexico(new StringReader(path)));
-            sintactico.parse();
-            Modelos.Errores.reportarErrores(fname);
-            txtSalida.setText(texto_consola);
-            addTreeNode();
-//        } catch (Exception e) {
-//            txtSalida.setText(e.toString());
-//        }
+            try {
+                String path = txtEntrada.getText();
+                Analizadores.parser sintactico;
+                sintactico = new Analizadores.parser(new Analizadores.Lexico(new StringReader(path)));
+                sintactico.parse();
+                Modelos.Errores.reportarErrores(fname);
+                txtSalida.setText(texto_consola);
+                addTreeNode();
+            } catch (Exception e) {
+                txtSalida.setText(e.toString());
+            }
             generated = true;
         }
     }//GEN-LAST:event_btnAutomatasActionPerformed
@@ -575,16 +575,16 @@ public class Interfaz extends javax.swing.JFrame {
             texto_consola = "";
             Modelos.Errores.lista_errores.clear();
             txtSalida.setText("");
-//        try {
-            String path = txtEntrada.getText();
-            Analizadores.parser sintactico;
-            sintactico = new Analizadores.parser(new Analizadores.Lexico(new StringReader(path)));
-            sintactico.parse();
-            Modelos.Errores.reportarErrores(fname);
-            txtSalida.setText(texto_consola);
-//        } catch (Exception e) {
-//            txtSalida.setText(e.toString());
-//        }
+            try {
+                String path = txtEntrada.getText();
+                Analizadores.parser sintactico;
+                sintactico = new Analizadores.parser(new Analizadores.Lexico(new StringReader(path)));
+                sintactico.parse();
+                Modelos.Errores.reportarErrores(fname);
+                txtSalida.setText(texto_consola);
+            } catch (Exception e) {
+                txtSalida.setText(e.toString());
+            }
         } else {
             JOptionPane.showMessageDialog(this, "No se encuentran autómatas generados\n", " Intente de nuevo", JOptionPane.WARNING_MESSAGE);
         }

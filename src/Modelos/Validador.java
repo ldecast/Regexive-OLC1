@@ -78,8 +78,13 @@ public class Validador {
 
     private Conjunto getConj() {
         for (Conjunto conjunto : conjuntosExist) {
-            if (true) {
-
+            for (int i = 0; i < cadenas.size(); i++) {
+                for (int j = 0; j < cadenas.get(i).valor.length(); j++) {
+                    char tmp2 = cadenas.get(i).valor.charAt(j);
+                    if (conjunto.caracteres.equals(tmp2)) {
+                        return conjunto;
+                    }
+                }
             }
         }
         return null;
@@ -100,12 +105,6 @@ class Cadena {
     public Cadena(String id, String valor) {
         this.id = id;
         this.valor = valor;
-        this.valida = isValidate();
-    }
-
-    private boolean isValidate() {
-        Random bool = new Random();
-        return bool.nextBoolean();
     }
 
 }

@@ -28,11 +28,10 @@ parser code
 action code {:
 :}
 
-terminal String prconj, pcoma, dospuntos, labre, lcierra, porcentajes, id, lexema, notacionL, notacionD, notacionA, deriva, operador, multiplicativo, conjuntoo, especial, cadena;
+terminal String prconj, pcoma, dospuntos, labre, lcierra, porcentajes, id, lexema, notacionL, notacionD, notacionA, deriva, operador, multiplicativo, conjuntoo, especial;
 
 non terminal String INICIO, EXP, SENTENCIA, EXPRESION, NOTACION, CONJUNTO, INFIJA;
 non terminal NodoTree DEF, OPM;
-non terminal String CADENAS;
 
 start with INICIO;
 
@@ -64,6 +63,7 @@ INFIJA ::= id:name deriva DEF:s     {:  if (Interfaz.funcion == "GENERAR AUTOMAT
                                             parser.id++;
                                             Expresiones.setName(name);
                                             Expresiones.loadExp();
+                                            Expresiones.tmp.clear();
                                             parser.raiz = nodoI;
                                             TREE arbol = new TREE(parser.raiz, name);
                                             Interfaz.texto_consola+="Autómatas generados para la expresión: "+name+"\n";
@@ -79,7 +79,7 @@ DEF::= DEF:a OPM    {:
 
 
 OPM::=  multiplicativo:m OPM:o      {:  if (Interfaz.funcion == "GENERAR AUTOMATAS") {
-                                            //Expresiones.add(m);
+                                            Expresiones.addTmp(m);
                                             NodoTree nodo = new NodoTree(parser.id, m, o, null);
                                             parser.id++;
                                             RESULT = nodo;
@@ -87,28 +87,28 @@ OPM::=  multiplicativo:m OPM:o      {:  if (Interfaz.funcion == "GENERAR AUTOMAT
                                     :}
 
         | operador:o OPM:a OPM:b    {:  if (Interfaz.funcion == "GENERAR AUTOMATAS") {
-                                            //Expresiones.add(o);
+                                            Expresiones.addTmp(o);
                                             NodoTree nodo = new NodoTree(parser.id, o, a, b);
                                             parser.id++;
                                             RESULT = nodo;
                                         }
                                     :}
         | lexema:b              {:  if (Interfaz.funcion == "GENERAR AUTOMATAS") {
-                                        //Expresiones.add(b);
+                                        Expresiones.addTmp(b);
                                         NodoTree nodo = new NodoTree(parser.aux, b, null, null);
                                         parser.aux++;
                                         RESULT = nodo;
                                     }
                                 :}
         | conjuntoo:a           {:  if (Interfaz.funcion == "GENERAR AUTOMATAS") {
-                                        //Expresiones.add(a);
+                                        Expresiones.addTmp(a);
                                         NodoTree nodo = new NodoTree(parser.aux, a, null, null);
                                         parser.aux++;
                                         RESULT = nodo;
                                     }
                                 :}
         | especial: c           {:  if (Interfaz.funcion == "GENERAR AUTOMATAS") {
-                                        //Expresiones.add(c);
+                                        Expresiones.addTmp(c);
                                         NodoTree nodo = new NodoTree(parser.aux, c, null, null);
                                         parser.aux++;
                                         RESULT = nodo;

@@ -2,7 +2,6 @@
 
 package Analizadores;
 import java_cup.runtime.*;
-import GUI.Interfaz;
 import Modelos.*;
 
 /**

@@ -15,9 +15,9 @@ import java.util.Stack;
  */
 public class Expresiones {
     
-    //public static ArrayList<Expresiones> lista_expresiones = new ArrayList<Expresiones>();
     public static Stack<String> stack = new Stack<>();
     public static ArrayList<Conjunto> conjuntos = new ArrayList<>(); //agregar por busqueda del nombre de la global de conjuntos
+    public static Stack<String> tmp = new Stack<>();
 
     public Expresiones() {
     }
@@ -26,7 +26,11 @@ public class Expresiones {
         stack.add(0, x);
     }
     public static void add(String x){
-        stack.add(x);
+        stack.add(x.trim());
+    }
+    
+    public static void addTmp(String x){
+        tmp.add(x.trim());
     }
     
     public static Stack<String> getExpr(){
@@ -47,8 +51,9 @@ public class Expresiones {
     
     public static void loadExp() throws IOException{
         String name = stack.remove(0);
-        AFND th = new AFND(name, stack);
+        AFND th = new AFND(name, stack, tmp);
         stack.clear();
+        tmp.clear();
     }
     
 }
